@@ -12,6 +12,10 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		7D1599A76DCF30EC32C1D31F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		D17064FE2F34834A005B26FD /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D17064FD2F34834A005B26FD /* AVKit.framework */; };
+		D17065002F34834F005B26FD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D17064FF2F34834F005B26FD /* AVFoundation.framework */; };
+		D17065022F348356005B26FD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D17065012F348355005B26FD /* AudioToolbox.framework */; };
+		D170650C2F35E682005B26FD /* monument_music-aristocratic-spin-waltz-191526.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D170650B2F35E682005B26FD /* monument_music-aristocratic-spin-waltz-191526.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-BadenHeritageCrossword.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BadenHeritageCrossword.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = BadenHeritageCrossword/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BadenHeritageCrossword/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D17064FD2F34834A005B26FD /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		D17064FF2F34834F005B26FD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D17065012F348355005B26FD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		D170650B2F35E682005B26FD /* monument_music-aristocratic-spin-waltz-191526.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "monument_music-aristocratic-spin-waltz-191526.mp3"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -32,6 +40,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D17065022F348356005B26FD /* AudioToolbox.framework in Frameworks */,
+				D17065002F34834F005B26FD /* AVFoundation.framework in Frameworks */,
+				D17064FE2F34834A005B26FD /* AVKit.framework in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-BadenHeritageCrossword.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +65,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D17065012F348355005B26FD /* AudioToolbox.framework */,
+				D17064FF2F34834F005B26FD /* AVFoundation.framework */,
+				D17064FD2F34834A005B26FD /* AVKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-BadenHeritageCrossword.a */,
 			);
@@ -75,6 +89,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				D170650B2F35E682005B26FD /* monument_music-aristocratic-spin-waltz-191526.mp3 */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -160,6 +175,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				D170650C2F35E682005B26FD /* monument_music-aristocratic-spin-waltz-191526.mp3 in Resources */,
 				7D1599A76DCF30EC32C1D31F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
