@@ -85,7 +85,12 @@ const s = StyleSheet.create({
     paddingHorizontal: 5,
     alignItems: 'center',
   },
-  badenTtl: { color: '#FFFFFF', fontWeight: '700', fontSize: 22 },
+  badenTtl: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 22,
+    textAlign: 'center',
+  },
   badenSub: {
     color: '#FFFFFF',
     fontStyle: 'italic',
@@ -98,7 +103,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginBottom: 36,
     width: '100%',
   },
@@ -108,6 +113,8 @@ const s = StyleSheet.create({
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'absolute',
+    left: 14,
   },
   btn: {
     width: '70%',

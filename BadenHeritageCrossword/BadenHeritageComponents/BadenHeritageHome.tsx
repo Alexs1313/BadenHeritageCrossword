@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Image,
+  Linking,
   Platform,
   Share,
   StyleSheet,
@@ -70,7 +71,6 @@ function getUnlockedAchievements(params: {
 }
 
 const ACH_SEEN_KEY = '@baden_achievements_seen_v1';
-// Quotes array
 
 const BADEN_QUOTES = [
   'Progress is built through consistency, not intensity.',
@@ -132,6 +132,45 @@ const BadenHeritageHome = () => {
     completedHard,
     reload,
   } = useCrosswordProgress();
+
+  useFocusEffect(
+    useCallback(() => {
+      loadBadenBgMusic();
+      loadBadenVibration();
+      loadBadenNotifications();
+
+      reload();
+    }, [reload]),
+  );
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const unlockedIds = getUnlockedAchievements({
+          completedTotal,
+          noHintWins,
+          completedEasy,
+          completedMedium,
+          completedHard,
+        });
+
+        const raw = await AsyncStorage.getItem(ACH_SEEN_KEY);
+        const seen: SeenMap = raw ? JSON.parse(raw) : ({} as SeenMap);
+
+        setHasNewAchievement(unlockedIds.some(id => !seen[id]));
+      } catch {
+        setHasNewAchievement(false);
+      }
+    };
+
+    run();
+  }, [
+    completedTotal,
+    noHintWins,
+    completedEasy,
+    completedMedium,
+    completedHard,
+  ]);
 
   const checkAchievementsDot = useCallback(async () => {
     try {
@@ -506,14 +545,21 @@ const BadenHeritageHome = () => {
                 </TouchableOpacity>
               </View>
 
-              <View style={stSheet.badenBottomShare}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  Linking.openURL(
+                    'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-word/id6758956954',
+                  )
+                }
+                style={stSheet.badenBottomShare}
+              >
                 <Image source={require('../HeritageAssts/imgs/s_btn.png')} />
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         )}
 
-        {/* ABOUT MODAL */}
         {aboutOpen && (
           <View style={stSheet.badelModaloverlay}>
             {Platform.OS === 'ios' && (

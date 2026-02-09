@@ -29,7 +29,6 @@ export default function BadenFactsScreen() {
     }, [reload]),
   );
 
-  // Max 6 facts, then they start repeating
   const unlockedCount = Math.min(6, Math.max(0, completedTotal));
 
   const unlockedFacts = useMemo(() => {
