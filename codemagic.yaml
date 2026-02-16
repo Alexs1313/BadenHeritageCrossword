@@ -4,16 +4,16 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: BadenHeritageCrosswordAPIKey
+      app_store_connect: BadenHeritageWordAPIKey
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.BadenHeritageCrossword
+        bundle_identifier: com.BadenHeritageWord
       vars:
-        BUNDLE_ID: com.BadenHeritageCrossword
+        BUNDLE_ID: com.BadenHeritageWord
         XCODE_WORKSPACE: BadenHeritageCrossword.xcworkspace
         XCODE_SCHEME: BadenHeritageCrossword
-        APP_STORE_APPLE_ID: 6758956954
+        APP_STORE_APPLE_ID: 6759241528
     scripts:
       - name: Install npm dependencies
         script: |
