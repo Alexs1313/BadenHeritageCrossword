@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import BadenBackground from '../BadenHeritageComponents/BadenBackground';
-import { BADEN_CROSSWORDS } from '../badenutils/badenCrosswords';
+import BadenBackground from '../Heritagecomponents/BadenBackground';
+import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
 
 export default function CrosswordTopics() {
   const nav = useNavigation<any>();

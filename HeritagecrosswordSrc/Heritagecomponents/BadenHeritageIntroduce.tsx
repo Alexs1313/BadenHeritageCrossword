@@ -36,6 +36,11 @@ const BadenHeritageIntroduce = () => {
           {currentPage === 3 && (
             <Image source={require('../HeritageAssts/imgs/badenobr4.png')} />
           )}
+          {currentPage === 4 && (
+            <Image
+              source={require('../HeritageAssts/imgs/heritagecroon1.png')}
+            />
+          )}
         </ImageBackground>
 
         <View style={stSheet.badenWelcView}>
@@ -44,6 +49,7 @@ const BadenHeritageIntroduce = () => {
             {currentPage === 1 && 'Five Thematic Categories'}
             {currentPage === 2 && 'Structured Progress'}
             {currentPage === 3 && 'Facts and Achievements'}
+            {currentPage === 4 && 'Articles and Knowledge'}
           </Text>
           <Text style={[stSheet.badenDescText, sPhone && { fontSize: 16 }]}>
             {currentPage === 0 &&
@@ -51,22 +57,26 @@ const BadenHeritageIntroduce = () => {
             {currentPage === 1 &&
               'Thermal culture, classical arts, architecture, society, and symbols. Each crossword follows a clear theme.'}
             {currentPage === 2 &&
-              ' Difficulty levels unlock gradually as you complete crosswords and move forward.'}
+              'Difficulty levels unlock gradually as you complete crosswords and move forward.'}
             {currentPage === 3 &&
-              ' Correct solutions unlock contextual facts and record your progress through achievements.'}
+              'Correct solutions unlock contextual facts and record your progress through achievements.'}
+            {currentPage === 4 &&
+              'Explore short articles about the history, culture, and architecture of Baden.'}
           </Text>
         </View>
 
         <TouchableOpacity
           style={stSheet.badenNextBtn}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          activeOpacity={0.8}
           onPress={() =>
-            currentPage === 3
+            currentPage === 4
               ? badenNav.replace('BadenHeritageHome')
               : setCurrentPage(currentPage + 1)
           }
         >
           <Text style={[stSheet.badenNextText, sPhone && { fontSize: 16 }]}>
-            {currentPage === 3 ? 'Start' : 'Next'}
+            {currentPage === 4 ? 'Begin' : 'Next'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -91,6 +101,8 @@ const stSheet = StyleSheet.create({
     backgroundColor: '#1C1E22A6',
     borderRadius: 22,
     paddingHorizontal: 30,
+    minHeight: 180,
+    justifyContent: 'center',
   },
   badenWelcText: {
     fontSize: 22,

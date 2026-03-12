@@ -1,6 +1,12 @@
+import { useBadenStore } from '../[Heritagecontxtt]/badenContext';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Sound from 'react-native-sound';
+
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Image,
+  ImageSourcePropType,
   Linking,
   Platform,
   Share,
@@ -11,15 +17,13 @@ import {
   View,
 } from 'react-native';
 import BadenBackground from './BadenBackground';
+
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { BlurView } from '@react-native-community/blur';
-import { useBadenStore } from '../HeritageStore/badenContext';
-import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Sound from 'react-native-sound';
 
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
-import { BADEN_CROSSWORDS } from '../badenutils/badenCrosswords';
+import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
+import LinearGradient from 'react-native-linear-gradient';
 
 type AchievementId =
   | 'first_step'
@@ -97,6 +101,80 @@ const BADEN_QUOTES = [
 
 const pickRandom = (arr: string[]) =>
   arr[Math.floor(Math.random() * arr.length)];
+
+const MENU_ICONS: Record<string, ImageSourcePropType | undefined> = {
+  crosswords: require('../HeritageAssts/imgs/heritagecricon.png'),
+  explore: require('../HeritageAssts/imgs/heritagecart.png'),
+  achievements: require('../HeritageAssts/imgs/heritagecachw.png'),
+  facts: require('../HeritageAssts/imgs/heritagecrfacts.png'),
+  settings: require('../HeritageAssts/imgs/heritagecrsett.png'),
+  wallpapers: require('../HeritageAssts/imgs/heritagecwallp.png'),
+};
+
+type MenuButtonProps = {
+  label: string;
+  iconSource?: ImageSourcePropType;
+  onPress: () => void;
+  size?: 150;
+  showBadge?: boolean;
+  textSize?: '16';
+  textColor?: string;
+};
+
+const MenuButton = ({
+  label,
+  iconSource,
+  onPress,
+  size = 150,
+  showBadge = false,
+  textSize = 18,
+  height = 61,
+}: MenuButtonProps) => (
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.8}
+    style={{ width: size }}
+  >
+    <LinearGradient
+      colors={['#030051', '#030051']}
+      style={[stSheet.menuBtn, { height: height }]}
+    >
+      <View
+        style={{
+          padding: 10,
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View>
+          <Image
+            source={iconSource}
+            style={stSheet.menuBtnIcon}
+            resizeMode="contain"
+          />
+        </View>
+
+        <View style={stSheet.menuBtnContent}>
+          <Text
+            style={[
+              stSheet.menuBtnText,
+              {
+                fontSize: typeof textSize === 'number' ? textSize : 18,
+              },
+            ]}
+            numberOfLines={1}
+          >
+            {label}
+          </Text>
+          {showBadge && <View style={stSheet.redDot} />}
+        </View>
+        <Image source={require('../HeritageAssts/imgs/heritagecnextarr.png')} />
+      </View>
+    </LinearGradient>
+  </TouchableOpacity>
+);
 
 const BadenHeritageHome = () => {
   const { height: badenH } = useWindowDimensions();
@@ -389,66 +467,57 @@ const BadenHeritageHome = () => {
           />
         </View>
 
-        <View style={{ alignItems: 'center' }}>
-          <TouchableOpacity
-            style={[stSheet.badenNextBtn, { width: 203 }]}
-            onPress={() => navigation.navigate('CrosswordTopics')}
-            activeOpacity={0.8}
-          >
-            <Text
-              style={[
-                stSheet.badenNextText,
-                sPhone && { fontSize: 16 },
-                { fontSize: 18 },
-              ]}
-            >
-              Crosswords
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={stSheet.badenNextBtn}
-            onPress={() => navigation.navigate('BadenWallpapersScreen')}
-            activeOpacity={0.8}
-          >
-            <Text style={[stSheet.badenNextText, sPhone && { fontSize: 15 }]}>
-              Wallpapers
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={stSheet.badenNextBtn}
-            onPress={() => navigation.navigate('BadenAchievementsScreen')}
-            activeOpacity={0.8}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[stSheet.badenNextText, sPhone && { fontSize: 15 }]}>
-                Achievements
-              </Text>
-
-              {hasNewAchievement && <View style={stSheet.redDot} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={stSheet.badenNextBtn}
-            onPress={() => navigation.navigate('BadenFactsScreen')}
-            activeOpacity={0.8}
-          >
-            <Text style={[stSheet.badenNextText, sPhone && { fontSize: 15 }]}>
-              Facts
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={stSheet.badenNextBtn}
-            onPress={() => setSettingsOpen(true)}
-            activeOpacity={0.8}
-          >
-            <Text style={[stSheet.badenNextText, sPhone && { fontSize: 15 }]}>
-              Settings
-            </Text>
-          </TouchableOpacity>
+        <View style={stSheet.menuWrap}>
+          <View style={stSheet.menuColumn}>
+            <MenuButton
+              label="Crosswords"
+              iconSource={MENU_ICONS.crosswords}
+              onPress={() => navigation.navigate('CrosswordTopics')}
+              size={'90%'}
+            />
+            <MenuButton
+              label="Explore"
+              iconSource={MENU_ICONS.explore}
+              onPress={() => navigation.navigate('Exploreartclsscrn')}
+              size={'80%'}
+              height={54}
+            />
+          </View>
+          <View style={stSheet.menuGrid}>
+            <MenuButton
+              label="Achievements"
+              iconSource={MENU_ICONS.achievements}
+              onPress={() => navigation.navigate('BadenAchievementsScreen')}
+              size={'48%'}
+              showBadge={hasNewAchievement}
+              textSize={12}
+              height={50}
+            />
+            <MenuButton
+              label="Facts"
+              iconSource={MENU_ICONS.facts}
+              onPress={() => navigation.navigate('BadenFactsScreen')}
+              size={'48%'}
+              textSize={12}
+              height={50}
+            />
+            <MenuButton
+              label="Settings"
+              iconSource={MENU_ICONS.settings}
+              onPress={() => setSettingsOpen(true)}
+              size={'48%'}
+              textSize={12}
+              height={50}
+            />
+            <MenuButton
+              label="Wallpapers"
+              iconSource={MENU_ICONS.wallpapers}
+              onPress={() => navigation.navigate('BadenWallpapersScreen')}
+              size={'48%'}
+              textSize={12}
+              height={50}
+            />
+          </View>
         </View>
 
         {/* SETTINGS MODAL */}
@@ -549,7 +618,7 @@ const BadenHeritageHome = () => {
                 activeOpacity={0.7}
                 onPress={() =>
                   Linking.openURL(
-                    'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-word/id6758956954',
+                    'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-explorer/id6760485949',
                   )
                 }
                 style={stSheet.badenBottomShare}
@@ -618,7 +687,7 @@ const stSheet = StyleSheet.create({
   badenContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 
   badenWelcView: {
-    width: '90%',
+    width: '93%',
     marginBottom: 30,
     padding: 20,
     backgroundColor: '#1C1E22A6',
@@ -637,6 +706,70 @@ const stSheet = StyleSheet.create({
     width: '65%',
   },
 
+  menuWrap: {
+    width: '85%',
+    alignItems: 'center',
+  },
+  menuColumn: {
+    width: '100%',
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  menuGrid: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  menuBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 62,
+    width: '100%',
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#FFFFFF33',
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  menuBtnSmall: {
+    width: '48%',
+    marginBottom: 12,
+  },
+  menuBtnIconWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuBtnIcon: {
+    width: 28,
+    height: 28,
+  },
+  menuBtnIconPlaceholder: {
+    backgroundColor: '#C9A24D',
+    borderRadius: 8,
+  },
+  menuBtnSeparator: {
+    width: 1,
+    height: '60%',
+    backgroundColor: 'rgba(155, 19, 19, 0.98)',
+  },
+  menuBtnContent: {},
+  menuBtnText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  menuBtnTextSmall: {
+    fontSize: 12,
+  },
+  menuBtnText16: {
+    fontSize: 16,
+  },
+  menuBtnChevron: {
+    fontSize: 22,
+    color: '#FFFFFF',
+    fontWeight: '300',
+  },
   badenNextBtn: {
     width: 184,
     height: 50,

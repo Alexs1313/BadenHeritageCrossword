@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ImageBackground,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, ImageBackground } from 'react-native';
 import { WebView } from 'react-native-webview';
+
 import { useNavigation } from '@react-navigation/native';
 
 const html = `
@@ -115,22 +110,12 @@ const BadenHeritageLdng = () => {
   return (
     <ImageBackground
       style={styles.badenContainer}
-      source={require('../HeritageAssts/imgs/baden_b.png')}
+      source={require('../HeritageAssts/imgs/heritagecroswrdbg.png')}
     >
       <ScrollView
         contentContainerStyle={styles.badenContainerScroll}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            alignItems: 'center',
-            flex: 1,
-            justifyContent: 'center',
-          }}
-        >
-          <Image source={require('../HeritageAssts/imgs/bdn_im.png')} />
-        </View>
-
         <View style={styles.badenWebviewDock}>
           <WebView
             originWhitelist={['*']}

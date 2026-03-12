@@ -22,6 +22,8 @@ type TopicProgress = Record<string, Record<Difficulty, number>>;
 const DEF: TopicProgress = {};
 const toNum = (v: any) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
+const DEFAULT_COUPONS = 20;
+
 export const couponsReward: Record<Difficulty, number> = {
   easy: 3,
   medium: 4,
@@ -51,7 +53,11 @@ export function useCrosswordProgress() {
         AsyncStorage.getItem(KEY.noHintWins),
       ]);
 
-      setCoupons(toNum(c));
+      const couponsVal = c === null || c === undefined ? DEFAULT_COUPONS : toNum(c);
+      setCoupons(couponsVal);
+      if (c === null || c === undefined) {
+        await AsyncStorage.setItem(KEY.coupons, String(DEFAULT_COUPONS));
+      }
       setCompletedEasy(toNum(e));
       setCompletedTotal(toNum(t));
       setCompletedMedium(toNum(m));
@@ -170,6 +176,14 @@ export function useCrosswordProgress() {
     setCoupons(next);
   }, []);
 
+  const addCoupons = useCallback(async (delta: number) => {
+    const cRaw = await AsyncStorage.getItem(KEY.coupons);
+    const c = toNum(cRaw);
+    const next = c + delta;
+    await AsyncStorage.setItem(KEY.coupons, String(next));
+    setCoupons(next);
+  }, []);
+
   return {
     loading,
     coupons,
@@ -180,6 +194,7 @@ export function useCrosswordProgress() {
     getTopicIndex,
     setTopicIndex,
     consumeCoupons,
+    addCoupons,
     applyWin,
     reload: load,
     completedTotal,

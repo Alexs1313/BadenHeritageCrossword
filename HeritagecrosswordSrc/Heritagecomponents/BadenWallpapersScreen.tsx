@@ -1,5 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+
+import Share from 'react-native-share';
+import { captureRef } from 'react-native-view-shot';
+import { useBadenStore } from '../[Heritagecontxtt]/badenContext';
+import Toast from 'react-native-toast-message';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Alert,
@@ -12,21 +17,26 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import BadenBackground from '../BadenHeritageComponents/BadenBackground';
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
-import { BADEN_WALLPAPERS, WallpaperItem } from '../badenutils/badenWallpapers';
+import BadenBackground from './BadenBackground';
+import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import { BADEN_WALLPAPERS, WallpaperItem } from '../uttils/badenWallpapers';
 import { BlurView } from '@react-native-community/blur';
 import RNFS from 'react-native-fs';
-import Share from 'react-native-share';
-import { captureRef } from 'react-native-view-shot';
-import { useBadenStore } from '../HeritageStore/badenContext';
-import Toast from 'react-native-toast-message';
 
 // Constants
 
 const OWNED_KEY = '@baden_wallpapers_owned_v1';
 
+const DEFAULT_OWNED_IDS = BADEN_WALLPAPERS.slice(0, 2).map(w => w.id);
+
 type OwnedMap = Record<string, true>;
+
+function getDefaultOwned(): OwnedMap {
+  return DEFAULT_OWNED_IDS.reduce<OwnedMap>(
+    (acc, id) => ({ ...acc, [id]: true }),
+    {},
+  );
+}
 
 export default function BadenWallpapersScreen() {
   const nav = useNavigation<any>();
@@ -41,7 +51,13 @@ export default function BadenWallpapersScreen() {
 
   const loadOwned = useCallback(async () => {
     const raw = await AsyncStorage.getItem(OWNED_KEY);
-    setOwned(raw ? JSON.parse(raw) : {});
+    if (raw) {
+      setOwned(JSON.parse(raw));
+    } else {
+      const defaultOwned = getDefaultOwned();
+      await AsyncStorage.setItem(OWNED_KEY, JSON.stringify(defaultOwned));
+      setOwned(defaultOwned);
+    }
   }, []);
 
   useFocusEffect(

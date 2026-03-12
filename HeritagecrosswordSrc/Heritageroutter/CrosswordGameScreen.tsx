@@ -16,11 +16,11 @@ import {
   Vibration,
   Platform,
 } from 'react-native';
-import { BADEN_CROSSWORDS, Difficulty } from '../badenutils/badenCrosswords';
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
-import BadenBackground from '../BadenHeritageComponents/BadenBackground';
+import { BADEN_CROSSWORDS, Difficulty } from '../uttils/badenCrosswords';
+import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import BadenBackground from '../Heritagecomponents/BadenBackground';
 import { BlurView } from '@react-native-community/blur';
-import { useBadenStore } from '../HeritageStore/badenContext';
+import { useBadenStore } from '../[Heritagecontxtt]/badenContext';
 import Toast from 'react-native-toast-message';
 
 type SlotState = 'idle' | 'correct' | 'wrong';

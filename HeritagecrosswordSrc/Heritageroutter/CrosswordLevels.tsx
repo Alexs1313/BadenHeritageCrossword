@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Difficulty } from '../badenutils/badenCrosswords';
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
+import { Difficulty } from '../uttils/badenCrosswords';
+import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import BadenBackground from '../BadenHeritageComponents/BadenBackground';
+import BadenBackground from '../Heritagecomponents/BadenBackground';
 
 const difficultyLabel: Record<Difficulty, string> = {
   easy: 'Easy',

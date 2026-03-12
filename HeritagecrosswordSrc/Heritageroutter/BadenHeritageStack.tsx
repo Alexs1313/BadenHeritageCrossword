@@ -1,13 +1,15 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import BadenHeritageLdng from '../BadenHeritageComponents/BadenHeritageLdng';
-import BadenHeritageIntroduce from '../BadenHeritageComponents/BadenHeritageIntroduce';
-import BadenHeritageHome from '../BadenHeritageComponents/BadenHeritageHome';
+import BadenHeritageLdng from '../Heritagecomponents/BadenHeritageLdng';
+import BadenHeritageIntroduce from '../Heritagecomponents/BadenHeritageIntroduce';
+import BadenHeritageHome from '../Heritagecomponents/BadenHeritageHome';
 import CrosswordTopics from './CrosswordTopics';
 import CrosswordLevels from './CrosswordLevels';
 import CrosswordGameScreen from './CrosswordGameScreen';
-import BadenWallpapersScreen from '../BadenHeritageComponents/BadenWallpapersScreen';
-import BadenFactsScreen from '../BadenHeritageComponents/BadenFactsScreen';
-import BadenAchievementsScreen from '../BadenHeritageComponents/BadenAchievementsScreen';
+import BadenWallpapersScreen from '../Heritagecomponents/BadenWallpapersScreen';
+import BadenFactsScreen from '../Heritagecomponents/BadenFactsScreen';
+import BadenAchievementsScreen from '../Heritagecomponents/BadenAchievementsScreen';
+import Exploreartclsscrn from '../Heritagecomponents/Exploreartclsscrn';
+import Exploreartclsscrndetails from '../Heritagecomponents/Exploreartclsscrndetails';
 
 const HeritageStck = createStackNavigator();
 
@@ -43,6 +45,14 @@ const BadenHeritageStack = () => {
       <HeritageStck.Screen
         name="BadenAchievementsScreen"
         component={BadenAchievementsScreen}
+      />
+      <HeritageStck.Screen
+        name="Exploreartclsscrn"
+        component={Exploreartclsscrn}
+      />
+      <HeritageStck.Screen
+        name="Exploreartclsscrndetails"
+        component={Exploreartclsscrndetails}
       />
     </HeritageStck.Navigator>
   );

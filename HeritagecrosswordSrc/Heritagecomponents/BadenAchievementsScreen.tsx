@@ -1,3 +1,8 @@
+// BadenAchievementsScreen.tsx
+
+import { BADEN_ACHIEVEMENTS } from '../uttils/badenAchievements';
+import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import {
@@ -10,10 +15,7 @@ import {
   View,
 } from 'react-native';
 import BadenBackground from './BadenBackground';
-import { BADEN_CROSSWORDS } from '../badenutils/badenCrosswords';
-import { BADEN_ACHIEVEMENTS } from '../badenutils/badenAchievements';
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
 
 type AchievementId =
   | 'first_step'
@@ -150,15 +152,10 @@ export default function BadenAchievementsScreen() {
   const unlockedMap = useMemo(() => {
     return {
       first_step: completedTotal >= 1,
-
       early_scholar: completedTotal >= 5,
-
       steady_progress: totalEasy > 0 && completedEasy >= totalEasy,
-
       consistent_mind: noHintWins >= 10,
-
       heritage_keeper: totalMedium > 0 && completedMedium >= totalMedium,
-
       legacy_completed: legacyDone,
     } as Record<string, boolean>;
   }, [
@@ -171,9 +168,34 @@ export default function BadenAchievementsScreen() {
     legacyDone,
   ]);
 
+  const progressMap = useMemo(() => {
+    const legacyCurrent =
+      (completedEasy >= 1 ? 1 : 0) +
+      (completedMedium >= 1 ? 1 : 0) +
+      (completedHard >= 1 ? 1 : 0);
+    return {
+      first_step: { current: Math.min(completedTotal, 1), total: 1 },
+      early_scholar: { current: Math.min(completedTotal, 5), total: 5 },
+      steady_progress: { current: completedEasy, total: totalEasy || 1 },
+      consistent_mind: { current: Math.min(noHintWins, 10), total: 10 },
+      heritage_keeper: { current: completedMedium, total: totalMedium || 1 },
+      legacy_completed: { current: legacyCurrent, total: 3 },
+    } as Record<string, { current: number; total: number }>;
+  }, [
+    completedTotal,
+    noHintWins,
+    completedEasy,
+    completedMedium,
+    completedHard,
+    totalEasy,
+    totalMedium,
+  ]);
+
   const badenAchieveCard = useCallback(
     ({ item }: any) => {
       const unlocked = unlockedMap[item.id];
+      const progress = progressMap[item.id] ?? { current: 0, total: 1 };
+      const pct = progress.total > 0 ? progress.current / progress.total : 0;
 
       return (
         <View style={[s.heritcrd, { opacity: unlocked ? 1 : 0.85 }]}>
@@ -183,10 +205,23 @@ export default function BadenAchievementsScreen() {
           />
           <Text style={s.heritNme}>{item.title}</Text>
           <Text style={s.heritDsc}>{item.desc}</Text>
+          <View style={s.progressWrap}>
+            <View style={s.progressTrack}>
+              <View
+                style={[
+                  s.progressFill,
+                  { width: `${Math.min(100, pct * 100)}%` },
+                ]}
+              />
+            </View>
+            <Text style={s.progressLabel}>
+              {progress.current}/{progress.total}
+            </Text>
+          </View>
         </View>
       );
     },
-    [unlockedMap],
+    [unlockedMap, progressMap],
   );
 
   return (
@@ -280,5 +315,33 @@ const s = StyleSheet.create({
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 16,
+  },
+
+  progressWrap: {
+    width: '100%',
+    marginTop: 12,
+    alignItems: 'center',
+  },
+  progressTrack: {
+    width: '100%',
+    height: 15,
+    borderRadius: 24,
+    backgroundColor: '#919191',
+    overflow: 'hidden',
+    flexDirection: 'row',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 5,
+    backgroundColor: '#2E7D32',
+  },
+  progressLabel: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '500',
+    marginTop: 4,
+    position: 'absolute',
+    fontStyle: 'italic',
+    bottom: 2,
   },
 });

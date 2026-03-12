@@ -1,5 +1,9 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useMemo } from 'react';
+import BadenBackground from './BadenBackground';
+
+import { useNavigation } from '@react-navigation/native';
+
+import React, { useCallback } from 'react';
+
 import {
   FlatList,
   Image,
@@ -10,30 +14,13 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import BadenBackground from '../BadenHeritageComponents/BadenBackground';
 
 // Utils
-import { useCrosswordProgress } from '../badenutils/useCrosswordProgress';
-import { BADEN_FACTS } from '../badenutils/badenFacts';
+import { BADEN_FACTS } from '../uttils/badenFacts';
 
 export default function BadenFactsScreen() {
   const nav = useNavigation<any>();
-  const { completedTotal, reload } = useCrosswordProgress();
   const { height } = useWindowDimensions();
-
-  // Reload progress on screen focus
-
-  useFocusEffect(
-    useCallback(() => {
-      reload();
-    }, [reload]),
-  );
-
-  const unlockedCount = Math.min(6, Math.max(0, completedTotal));
-
-  const unlockedFacts = useMemo(() => {
-    return BADEN_FACTS.slice(0, unlockedCount);
-  }, [unlockedCount]);
 
   const onShare = useCallback(async (text: string) => {
     try {
@@ -76,31 +63,15 @@ export default function BadenFactsScreen() {
         <View style={{ width: 36 }} />
       </View>
 
-      {unlockedCount === 0 ? (
-        <View style={s.emptyFactsWrap}>
-          <Image
-            source={require('../HeritageAssts/imgs/facts_girl.png')}
-            style={s.emptyFactsImg}
-          />
-
-          <View style={s.emptyFactsCard}>
-            <Text style={s.emptyFactsTitle}>No facts unlocked yet…</Text>
-            <Text style={s.emptyFactsSub}>
-              Complete at least one crossword{'\n'}to unlock curated facts.
-            </Text>
-          </View>
-        </View>
-      ) : (
-        <FlatList
-          contentContainerStyle={s.bdnlist}
-          data={unlockedFacts}
-          keyExtractor={x => x.id}
-          renderItem={renderItem}
-          scrollEnabled={false}
-          ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <FlatList
+        contentContainerStyle={s.bdnlist}
+        data={BADEN_FACTS}
+        keyExtractor={x => x.id}
+        renderItem={renderItem}
+        scrollEnabled={false}
+        ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
+        showsVerticalScrollIndicator={false}
+      />
     </BadenBackground>
   );
 }
