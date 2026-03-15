@@ -144,11 +144,13 @@ export default function CrosswordGameScreen() {
         flashSlot(pos, 'correct');
       } else {
         // Vibration and flash for wrong answer
-        Vibration.vibrate(60);
+        if (isEnabledVibration) {
+          Vibration.vibrate(180);
+        }
         flashSlot(pos, 'wrong');
       }
     },
-    [used, picked.length, answer, flashSlot],
+    [used, picked.length, answer, flashSlot, isEnabledVibration],
   );
 
   const onBackspace = useCallback(() => {
@@ -250,6 +252,8 @@ export default function CrosswordGameScreen() {
     list.length,
     hintUsed,
     resetFireworksTimer,
+    isEnabledNotifications,
+    isEnabledVibration,
   ]);
 
   const resetTry = useCallback(() => {
@@ -261,6 +265,10 @@ export default function CrosswordGameScreen() {
   }, [answer.length]);
 
   const goNext = useCallback(async () => {
+    if (nextIdx === 0) {
+      nav.navigate('CrosswordTopics');
+      return;
+    }
     if (nextIdx !== null) {
       await setTopicIndex(topicId, difficulty, nextIdx);
     }
@@ -271,7 +279,7 @@ export default function CrosswordGameScreen() {
     setShowResult(null);
     setNextIdx(null);
     setSlotState(Array.from({ length: answer.length }, () => 'idle'));
-  }, [nextIdx, setTopicIndex, topicId, difficulty, answer.length]);
+  }, [nextIdx, setTopicIndex, topicId, difficulty, answer.length, nav]);
 
   const slotStyleFor = useCallback((st: SlotState) => {
     if (st === 'correct') return s.badenSlotCorrect;
@@ -525,6 +533,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 10,
+    marginBottom: 30,
   },
   badenHintBtn: {
     flex: 1,

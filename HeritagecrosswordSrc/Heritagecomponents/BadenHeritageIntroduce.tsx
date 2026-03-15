@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -44,8 +45,15 @@ const BadenHeritageIntroduce = () => {
         </ImageBackground>
 
         <View style={stSheet.badenWelcView}>
+          {currentPage === 0 && (
+            <Text style={[stSheet.badenWelcText, sPhone && { fontSize: 18 }]}>
+              {Platform.OS === 'ios'
+                ? 'BadenBabeп: Heritage Word'
+                : 'Baden Heritage Explorer'}
+            </Text>
+          )}
+
           <Text style={[stSheet.badenWelcText, sPhone && { fontSize: 18 }]}>
-            {currentPage === 0 && 'BadenBabeп: Heritage Word'}
             {currentPage === 1 && 'Five Thematic Categories'}
             {currentPage === 2 && 'Structured Progress'}
             {currentPage === 3 && 'Facts and Achievements'}

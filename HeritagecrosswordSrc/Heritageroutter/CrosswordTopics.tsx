@@ -89,5 +89,5 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cover: { width: 104, height: 104, borderRadius: 16, marginRight: 14 },
-  badnCardText: { color: '#FFFFFF', fontSize: 20, fontWeight: '700' },
+  badnCardText: { color: '#FFFFFF', fontSize: 18, fontWeight: '700' },
 });

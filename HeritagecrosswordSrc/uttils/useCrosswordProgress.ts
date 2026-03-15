@@ -76,7 +76,7 @@ export function useCrosswordProgress() {
   const isUnlocked = useMemo(() => {
     return {
       easy: true,
-      medium: completedEasy >= 4,
+      medium: true,
       hard: completedMedium >= 4,
       extreme: completedHard >= 4,
     } as Record<Difficulty, boolean>;

@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Modal,
   Platform,
   StyleSheet,
   Text,
@@ -225,51 +226,63 @@ export default function BadenWallpapersScreen() {
         />
 
         {!!pending && (
-          <View style={s.badenOverlay}>
-            {Platform.OS === 'ios' && (
-              <BlurView
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-                blurType="dark"
-                blurAmount={1}
-              />
-            )}
-            <View style={s.badenModal}>
-              <Text style={s.badenModalText}>
-                Are you sure you want to exchange your coupons for this
-                wallpaper?
-              </Text>
-            </View>
+          <Modal
+            style={s.badenOverlay}
+            transparent
+            animationType="fade"
+            visible
+            onRequestClose={closeBuy}
+          >
+            <View style={s.badenOverlay}>
+              {Platform.OS === 'ios' && (
+                <BlurView
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                  blurType="dark"
+                  blurAmount={1}
+                />
+              )}
+              <View style={s.badenModal}>
+                <Text style={s.badenModalText}>
+                  Are you sure you want to exchange your coupons for this
+                  wallpaper?
+                </Text>
+              </View>
 
-            <View style={s.modalRow}>
-              <TouchableOpacity
-                style={[
-                  s.modalBtn,
-                  s.modalConfirm,
-                  { opacity: busy ? 0.6 : 1 },
-                ]}
-                activeOpacity={0.9}
-                onPress={confirmBuy}
-                disabled={busy}
-              >
-                <Text style={s.modalBtnTxt}>Confirm</Text>
-              </TouchableOpacity>
+              <View style={s.modalRow}>
+                <TouchableOpacity
+                  style={[
+                    s.modalBtn,
+                    s.modalConfirm,
+                    { opacity: busy ? 0.6 : 1 },
+                  ]}
+                  activeOpacity={0.9}
+                  onPress={confirmBuy}
+                  disabled={busy}
+                >
+                  <Text style={s.modalBtnTxt}>Confirm</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={[s.modalBtn, s.modalCancel, { opacity: busy ? 0.6 : 1 }]}
-                activeOpacity={0.9}
-                onPress={closeBuy}
-                disabled={busy}
-              >
-                <Text style={s.modalBtnTxt}>Cancel</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    s.modalBtn,
+                    s.modalCancel,
+                    { opacity: busy ? 0.6 : 1 },
+                  ]}
+                  activeOpacity={0.9}
+                  onPress={closeBuy}
+                  disabled={busy}
+                >
+                  <Text style={s.modalBtnTxt}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </Modal>
         )}
       </View>
     </BadenBackground>

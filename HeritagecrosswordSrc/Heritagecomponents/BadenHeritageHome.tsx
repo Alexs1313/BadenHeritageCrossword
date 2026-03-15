@@ -168,7 +168,7 @@ const MenuButton = ({
           >
             {label}
           </Text>
-          {showBadge && <View style={stSheet.redDot} />}
+          {/* {showBadge && <View style={stSheet.redDot} />} */}
         </View>
         <Image source={require('../HeritageAssts/imgs/heritagecnextarr.png')} />
       </View>
@@ -441,7 +441,9 @@ const BadenHeritageHome = () => {
       <View
         style={[
           stSheet.badenContainer,
-          Platform.OS === 'android' ? { filter: 'blur(5px)' } : {},
+          Platform.OS === 'android' &&
+            aboutOpen &&
+            settingsOpen && { filter: 'blur(5px)' },
         ]}
       >
         <Image source={require('../HeritageAssts/imgs/hm_lg.png')} />
@@ -548,21 +550,23 @@ const BadenHeritageHome = () => {
               </TouchableOpacity>
 
               <View style={stSheet.settingsList}>
-                <TouchableOpacity
-                  style={stSheet.badenSettingWrap}
-                  activeOpacity={0.7}
-                  onPress={() => toggleBadenMusic(!isEnabledSound)}
-                >
-                  <Text style={stSheet.badenSettingText}>Music</Text>
-                  <Image
-                    style={{ width: 24, height: 24, resizeMode: 'contain' }}
-                    source={
-                      isEnabledSound
-                        ? require('../HeritageAssts/imgs/music_on.png')
-                        : require('../HeritageAssts/imgs/music_off.png')
-                    }
-                  />
-                </TouchableOpacity>
+                {Platform.OS === 'ios' && (
+                  <TouchableOpacity
+                    style={stSheet.badenSettingWrap}
+                    activeOpacity={0.7}
+                    onPress={() => toggleBadenMusic(!isEnabledSound)}
+                  >
+                    <Text style={stSheet.badenSettingText}>Music</Text>
+                    <Image
+                      style={{ width: 24, height: 24, resizeMode: 'contain' }}
+                      source={
+                        isEnabledSound
+                          ? require('../HeritageAssts/imgs/music_on.png')
+                          : require('../HeritageAssts/imgs/music_off.png')
+                      }
+                    />
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   style={stSheet.badenSettingWrap}
@@ -614,17 +618,19 @@ const BadenHeritageHome = () => {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() =>
-                  Linking.openURL(
-                    'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-explorer/id6760485949',
-                  )
-                }
-                style={stSheet.badenBottomShare}
-              >
-                <Image source={require('../HeritageAssts/imgs/s_btn.png')} />
-              </TouchableOpacity>
+              {Platform.OS === 'ios' && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-explorer/id6760485949',
+                    )
+                  }
+                  style={stSheet.badenBottomShare}
+                >
+                  <Image source={require('../HeritageAssts/imgs/s_btn.png')} />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         )}
@@ -755,7 +761,7 @@ const stSheet = StyleSheet.create({
   },
   menuBtnContent: {},
   menuBtnText: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#FFFFFF',
     fontWeight: '700',
   },
@@ -789,6 +795,9 @@ const stSheet = StyleSheet.create({
     marginLeft: 10,
     borderWidth: 1,
     borderColor: '#FFFFFF',
+    position: 'absolute',
+    top: 4,
+    right: -14,
   },
   badenNextText: {
     fontSize: 16,

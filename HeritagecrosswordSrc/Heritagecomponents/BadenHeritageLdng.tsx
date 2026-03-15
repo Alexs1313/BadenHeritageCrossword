@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ScrollView, ImageBackground } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+  Platform,
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { useNavigation } from '@react-navigation/native';
@@ -110,7 +116,11 @@ const BadenHeritageLdng = () => {
   return (
     <ImageBackground
       style={styles.badenContainer}
-      source={require('../HeritageAssts/imgs/heritagecroswrdbg.png')}
+      source={
+        Platform.OS === 'ios'
+          ? require('../HeritageAssts/imgs/heritagecroswrdbg.png')
+          : require('../HeritageAssts/imgs/bdnheritgloader.png')
+      }
     >
       <ScrollView
         contentContainerStyle={styles.badenContainerScroll}
