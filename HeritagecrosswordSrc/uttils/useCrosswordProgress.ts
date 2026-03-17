@@ -53,7 +53,8 @@ export function useCrosswordProgress() {
         AsyncStorage.getItem(KEY.noHintWins),
       ]);
 
-      const couponsVal = c === null || c === undefined ? DEFAULT_COUPONS : toNum(c);
+      const couponsVal =
+        c === null || c === undefined ? DEFAULT_COUPONS : toNum(c);
       setCoupons(couponsVal);
       if (c === null || c === undefined) {
         await AsyncStorage.setItem(KEY.coupons, String(DEFAULT_COUPONS));

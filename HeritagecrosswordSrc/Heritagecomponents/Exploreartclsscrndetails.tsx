@@ -16,130 +16,195 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BadenBackground from './BadenBackground';
+import BadenBackground from './ExplrrLayout';
 import {
   BADEN_EXPLORE_ARTICLES,
   ExploreArticle,
 } from '../uttils/badenExploreArticles';
 import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import ExplrrLayout from './ExplrrLayout';
 
-const SAVED_KEY = '@baden_explore_saved_v1';
-const QUIZ_DONE_KEY = '@baden_explore_quiz_done_v1';
-const DEFAULT_THUMB = require('../HeritageAssts/imgs/walp1.png');
+const explorCrosswSavedKey = '@baden_explore_saved_v1';
+const explorCrosswQuizDoneKey = '@baden_explore_quiz_done_v1';
+const explorCrosswDefaultThumb = require('../HeritageAssts/imgs/walp1.png');
 
-type QuizDoneSet = Record<string, true>;
-type SavedSet = Record<string, true>;
+type ExplorCrosswQuizDoneSet = Record<string, true>;
+type ExplorCrosswSavedSet = Record<string, true>;
 
-type NavParams = { Exploreartclsscrndetails: { articleId: string } };
+type ExplorCrosswNavParams = {
+  Exploreartclsscrndetails: { articleId: string };
+};
 
 export default function Exploreartclsscrndetails() {
-  const nav = useNavigation<any>();
-  const route = useRoute<RouteProp<NavParams, 'Exploreartclsscrndetails'>>();
-  const { height } = useWindowDimensions();
-  const articleId = route.params?.articleId ?? '';
-  const article = BADEN_EXPLORE_ARTICLES.find(a => a.id === articleId) ?? null;
+  const explorCrosswNav = useNavigation<any>();
+  const explorCrosswRoute =
+    useRoute<RouteProp<ExplorCrosswNavParams, 'Exploreartclsscrndetails'>>();
+  const { height: explorCrosswHeight } = useWindowDimensions();
+  const explorCrosswArticleId = explorCrosswRoute.params?.articleId ?? '';
+  const explorCrosswArticle =
+    BADEN_EXPLORE_ARTICLES.find(
+      explorCrosswItem => explorCrosswItem.id === explorCrosswArticleId,
+    ) ?? null;
 
-  const { addCoupons, reload } = useCrosswordProgress();
-  const [quizDoneIds, setQuizDoneIds] = useState<QuizDoneSet>({});
-  const [savedIds, setSavedIds] = useState<SavedSet>({});
-  const [quizFeedback, setQuizFeedback] = useState<'correct' | 'wrong' | null>(
-    null,
-  );
-  const [quizJustRewarded, setQuizJustRewarded] = useState(false);
+  const { addCoupons: explorCrosswAddCoupons, reload: explorCrosswReload } =
+    useCrosswordProgress();
 
-  const loadQuizDone = useCallback(async () => {
+  const [explorCrosswQuizDoneIds, setExplorCrosswQuizDoneIds] =
+    useState<ExplorCrosswQuizDoneSet>({});
+  const [explorCrosswSavedIds, setExplorCrosswSavedIds] =
+    useState<ExplorCrosswSavedSet>({});
+  const [explorCrosswQuizFeedback, setExplorCrosswQuizFeedback] = useState<
+    'correct' | 'wrong' | null
+  >(null);
+  const [explorCrosswQuizJustRewarded, setExplorCrosswQuizJustRewarded] =
+    useState(false);
+
+  const explorCrosswLoadQuizDone = useCallback(async () => {
     try {
-      const raw = await AsyncStorage.getItem(QUIZ_DONE_KEY);
-      setQuizDoneIds(raw ? JSON.parse(raw) : {});
+      const explorCrosswRaw = await AsyncStorage.getItem(
+        explorCrosswQuizDoneKey,
+      );
+      setExplorCrosswQuizDoneIds(
+        explorCrosswRaw ? JSON.parse(explorCrosswRaw) : {},
+      );
     } catch {
-      setQuizDoneIds({});
+      setExplorCrosswQuizDoneIds({});
     }
   }, []);
 
-  const loadSaved = useCallback(async () => {
+  const explorCrosswLoadSaved = useCallback(async () => {
     try {
-      const raw = await AsyncStorage.getItem(SAVED_KEY);
-      setSavedIds(raw ? JSON.parse(raw) : {});
+      const explorCrosswRaw = await AsyncStorage.getItem(explorCrosswSavedKey);
+      setExplorCrosswSavedIds(
+        explorCrosswRaw ? JSON.parse(explorCrosswRaw) : {},
+      );
     } catch {
-      setSavedIds({});
+      setExplorCrosswSavedIds({});
     }
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      loadQuizDone();
-      loadSaved();
-      reload();
-    }, [loadQuizDone, loadSaved, reload]),
+      explorCrosswLoadQuizDone();
+      explorCrosswLoadSaved();
+      explorCrosswReload();
+    }, [explorCrosswLoadQuizDone, explorCrosswLoadSaved, explorCrosswReload]),
   );
 
-  const toggleSaved = useCallback(
-    async (id: string) => {
-      const next: SavedSet = { ...savedIds };
-      if (next[id]) delete next[id];
-      else next[id] = true;
-      setSavedIds(next);
-      await AsyncStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  const explorCrosswToggleSaved = useCallback(
+    async (explorCrosswId: string) => {
+      const explorCrosswNext: ExplorCrosswSavedSet = {
+        ...explorCrosswSavedIds,
+      };
+
+      if (explorCrosswNext[explorCrosswId]) {
+        delete explorCrosswNext[explorCrosswId];
+      } else {
+        explorCrosswNext[explorCrosswId] = true;
+      }
+
+      setExplorCrosswSavedIds(explorCrosswNext);
+      await AsyncStorage.setItem(
+        explorCrosswSavedKey,
+        JSON.stringify(explorCrosswNext),
+      );
     },
-    [savedIds],
+    [explorCrosswSavedIds],
   );
 
-  const isSaved = useCallback((id: string) => !!savedIds[id], [savedIds]);
+  const explorCrosswIsSaved = useCallback(
+    (explorCrosswId: string) => !!explorCrosswSavedIds[explorCrosswId],
+    [explorCrosswSavedIds],
+  );
 
-  const onShare = useCallback(async (a: ExploreArticle) => {
-    try {
-      await Share.share({
-        message: `${a.title}\n\n${a.body}\n\nTrue / False\n${a.quizQuestion} (${
-          a.quizAnswer ? 'True' : 'False'
-        })`,
-      });
-    } catch {}
-  }, []);
+  const explorCrosswOnShare = useCallback(
+    async (explorCrosswItem: ExploreArticle) => {
+      try {
+        await Share.share({
+          message: `${explorCrosswItem.title}\n\n${
+            explorCrosswItem.body
+          }\n\nTrue / False\n${explorCrosswItem.quizQuestion} (${
+            explorCrosswItem.quizAnswer ? 'True' : 'False'
+          })`,
+        });
+      } catch {}
+    },
+    [],
+  );
 
-  const answerTrueFalse = useCallback(
-    async (a: ExploreArticle, userAnswer: boolean) => {
-      const correct = userAnswer === a.quizAnswer;
-      const alreadyDone = !!quizDoneIds[a.id];
+  const explorCrosswAnswerTrueFalse = useCallback(
+    async (
+      explorCrosswItem: ExploreArticle,
+      explorCrosswUserAnswer: boolean,
+    ) => {
+      const explorCrosswCorrect =
+        explorCrosswUserAnswer === explorCrosswItem.quizAnswer;
+      const explorCrosswAlreadyDone =
+        !!explorCrosswQuizDoneIds[explorCrosswItem.id];
 
-      if (alreadyDone) {
-        setQuizFeedback(correct ? 'correct' : 'wrong');
+      if (explorCrosswAlreadyDone) {
+        setExplorCrosswQuizFeedback(explorCrosswCorrect ? 'correct' : 'wrong');
         return;
       }
 
-      if (correct) {
-        await addCoupons(1);
-        const nextDone: QuizDoneSet = { ...quizDoneIds, [a.id]: true };
-        setQuizDoneIds(nextDone);
-        await AsyncStorage.setItem(QUIZ_DONE_KEY, JSON.stringify(nextDone));
-        setQuizFeedback('correct');
-        setQuizJustRewarded(true);
+      if (explorCrosswCorrect) {
+        await explorCrosswAddCoupons(1);
+
+        const explorCrosswNextDone: ExplorCrosswQuizDoneSet = {
+          ...explorCrosswQuizDoneIds,
+          [explorCrosswItem.id]: true,
+        };
+
+        setExplorCrosswQuizDoneIds(explorCrosswNextDone);
+        await AsyncStorage.setItem(
+          explorCrosswQuizDoneKey,
+          JSON.stringify(explorCrosswNextDone),
+        );
+        setExplorCrosswQuizFeedback('correct');
+        setExplorCrosswQuizJustRewarded(true);
       } else {
-        setQuizFeedback('wrong');
+        setExplorCrosswQuizFeedback('wrong');
       }
     },
-    [quizDoneIds, addCoupons],
+    [explorCrosswQuizDoneIds, explorCrosswAddCoupons],
   );
 
-  if (!article) {
+  if (!explorCrosswArticle) {
     return (
-      <BadenBackground>
-        <View style={[s.container, { paddingTop: height * 0.07 }]}>
-          <TouchableOpacity onPress={() => nav.goBack()} style={s.backBtn}>
+      <ExplrrLayout>
+        <View
+          style={[
+            explorCrosswStyles.explorCrosswContainer,
+            { paddingTop: explorCrosswHeight * 0.07 },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => explorCrosswNav.goBack()}
+            style={explorCrosswStyles.explorCrosswBackBtn}
+          >
             <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
           </TouchableOpacity>
-          <Text style={s.errorText}>Article not found.</Text>
+
+          <Text style={explorCrosswStyles.explorCrosswErrorText}>
+            Article not found.
+          </Text>
         </View>
-      </BadenBackground>
+      </ExplrrLayout>
     );
   }
 
   return (
-    <BadenBackground>
-      <View style={[s.container, { paddingTop: height * 0.07 }]}>
-        <View style={s.header}>
+    <ExplrrLayout>
+      <View
+        style={[
+          explorCrosswStyles.explorCrosswContainer,
+          { paddingTop: explorCrosswHeight * 0.07 },
+        ]}
+      >
+        <View style={explorCrosswStyles.explorCrosswHeader}>
           <TouchableOpacity
-            onPress={() => nav.goBack()}
-            style={s.backBtn}
+            onPress={() => explorCrosswNav.goBack()}
+            style={explorCrosswStyles.explorCrosswBackBtn}
             activeOpacity={0.5}
           >
             <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
@@ -147,200 +212,234 @@ export default function Exploreartclsscrndetails() {
         </View>
 
         <ScrollView
-          style={s.scroll}
-          contentContainerStyle={s.scrollContent}
+          style={explorCrosswStyles.explorCrosswScroll}
+          contentContainerStyle={explorCrosswStyles.explorCrosswScrollContent}
           showsVerticalScrollIndicator={true}
         >
-          <View
-            style={{
-              borderRadius: 22,
-              backgroundColor: '#1C1E22A6',
-              borderWidth: 1,
-              borderColor: '#2A2D33',
-              padding: 20,
-              paddingVertical: 4,
-              paddingTop: 0,
-            }}
-          >
-            <View style={s.headerRow}>
+          <View style={explorCrosswStyles.explorCrosswContentCard}>
+            <View style={explorCrosswStyles.explorCrosswHeaderRow}>
               <Image
-                source={article.thumb ?? DEFAULT_THUMB}
-                style={s.thumb}
+                source={explorCrosswArticle.thumb ?? explorCrosswDefaultThumb}
+                style={explorCrosswStyles.explorCrosswThumb}
                 resizeMode="cover"
               />
-              <View style={s.titleWrap}>
-                <Text style={s.title} numberOfLines={2}>
-                  {article.title}
+              <View style={explorCrosswStyles.explorCrosswTitleWrap}>
+                <Text
+                  style={explorCrosswStyles.explorCrosswTitle}
+                  numberOfLines={2}
+                >
+                  {explorCrosswArticle.title}
                 </Text>
               </View>
             </View>
-            <Text style={s.body}>{article.body}</Text>
-            <Text style={s.quizLabel}>True or False</Text>
-            <Text style={s.quizQuestion}>{article.quizQuestion}</Text>
-            <View style={s.trueFalseRow}>
+
+            <Text style={explorCrosswStyles.explorCrosswBody}>
+              {explorCrosswArticle.body}
+            </Text>
+
+            <Text style={explorCrosswStyles.explorCrosswQuizLabel}>
+              True or False
+            </Text>
+
+            <Text style={explorCrosswStyles.explorCrosswQuizQuestion}>
+              {explorCrosswArticle.quizQuestion}
+            </Text>
+
+            <View style={explorCrosswStyles.explorCrosswTrueFalseRow}>
               <TouchableOpacity
                 style={[
-                  s.trueFalseBtn,
-                  quizFeedback === 'correct' &&
-                    article.quizAnswer === true &&
-                    s.trueFalseBtnCorrect,
-                  quizFeedback === 'wrong' &&
-                    article.quizAnswer !== true &&
-                    s.trueFalseBtnWrong,
-                  quizFeedback !== null && s.trueFalseBtnDisabled,
+                  explorCrosswStyles.explorCrosswTrueFalseBtn,
+                  explorCrosswQuizFeedback === 'correct' &&
+                    explorCrosswArticle.quizAnswer === true &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnCorrect,
+                  explorCrosswQuizFeedback === 'wrong' &&
+                    explorCrosswArticle.quizAnswer !== true &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnWrong,
+                  explorCrosswQuizFeedback !== null &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnDisabled,
                 ]}
                 onPress={() =>
-                  quizFeedback === null && answerTrueFalse(article, true)
+                  explorCrosswQuizFeedback === null &&
+                  explorCrosswAnswerTrueFalse(explorCrosswArticle, true)
                 }
                 activeOpacity={0.8}
-                disabled={quizFeedback !== null}
+                disabled={explorCrosswQuizFeedback !== null}
               >
-                <Text style={s.trueFalseBtnText}>True</Text>
+                <Text style={explorCrosswStyles.explorCrosswTrueFalseBtnText}>
+                  True
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={[
-                  s.trueFalseBtn,
-                  quizFeedback === 'correct' &&
-                    article.quizAnswer === false &&
-                    s.trueFalseBtnCorrect,
-                  quizFeedback === 'wrong' &&
-                    article.quizAnswer !== false &&
-                    s.trueFalseBtnWrong,
-                  quizFeedback !== null && s.trueFalseBtnDisabled,
+                  explorCrosswStyles.explorCrosswTrueFalseBtn,
+                  explorCrosswQuizFeedback === 'correct' &&
+                    explorCrosswArticle.quizAnswer === false &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnCorrect,
+                  explorCrosswQuizFeedback === 'wrong' &&
+                    explorCrosswArticle.quizAnswer !== false &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnWrong,
+                  explorCrosswQuizFeedback !== null &&
+                    explorCrosswStyles.explorCrosswTrueFalseBtnDisabled,
                 ]}
                 onPress={() =>
-                  quizFeedback === null && answerTrueFalse(article, false)
+                  explorCrosswQuizFeedback === null &&
+                  explorCrosswAnswerTrueFalse(explorCrosswArticle, false)
                 }
                 activeOpacity={0.8}
-                disabled={quizFeedback !== null}
+                disabled={explorCrosswQuizFeedback !== null}
               >
-                <Text style={s.trueFalseBtnText}>False</Text>
+                <Text style={explorCrosswStyles.explorCrosswTrueFalseBtnText}>
+                  False
+                </Text>
               </TouchableOpacity>
             </View>
 
-            {quizFeedback === 'correct' && quizJustRewarded && (
-              <Text style={s.quizRewardText}>
-                Well done! 1 ticket received!
+            {explorCrosswQuizFeedback === 'correct' &&
+              explorCrosswQuizJustRewarded && (
+                <Text style={explorCrosswStyles.explorCrosswQuizRewardText}>
+                  Well done! 1 ticket received!
+                </Text>
+              )}
+
+            {explorCrosswQuizFeedback === 'wrong' && (
+              <Text style={explorCrosswStyles.explorCrosswQuizWrongText}>
+                Incorrect.
               </Text>
             )}
-            {quizFeedback === 'wrong' && (
-              <Text style={s.quizWrongText}>Incorrect.</Text>
-            )}
-            <View style={s.bottomBar}>
+
+            <View style={explorCrosswStyles.explorCrosswBottomBar}>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => toggleSaved(article.id)}
-                style={s.bottomIcon}
+                onPress={() => explorCrosswToggleSaved(explorCrosswArticle.id)}
+                style={explorCrosswStyles.explorCrosswBottomIcon}
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               >
                 <Image
                   source={
-                    isSaved(article.id)
+                    explorCrosswIsSaved(explorCrosswArticle.id)
                       ? require('../HeritageAssts/imgs/heritagecnartcsvd.png')
                       : require('../HeritageAssts/imgs/heritagecnartcsv.png')
                   }
-                  style={s.bottomIconImg}
+                  style={explorCrosswStyles.explorCrosswBottomIconImg}
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => nav.navigate('CrosswordTopics')}
-                style={s.testYourselfBtn}
+                onPress={() => explorCrosswNav.navigate('CrosswordTopics')}
+                style={explorCrosswStyles.explorCrosswTestYourselfBtn}
               >
-                <Text style={s.testYourselfBtnText}>Test Yourself</Text>
+                <Text
+                  style={explorCrosswStyles.explorCrosswTestYourselfBtnText}
+                >
+                  Test Yourself
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => onShare(article)}
-                style={s.bottomIcon}
+                onPress={() => explorCrosswOnShare(explorCrosswArticle)}
+                style={explorCrosswStyles.explorCrosswBottomIcon}
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               >
                 <Image
                   source={require('../HeritageAssts/imgs/s_btn.png')}
-                  style={s.bottomIconImg}
+                  style={explorCrosswStyles.explorCrosswBottomIconImg}
                 />
               </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
       </View>
-    </BadenBackground>
+    </ExplrrLayout>
   );
 }
 
-const s = StyleSheet.create({
-  container: {
+const explorCrosswStyles = StyleSheet.create({
+  explorCrosswContainer: {
     flex: 1,
     paddingHorizontal: 20,
   },
-  header: {
+  explorCrosswHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
   },
-  backBtn: {
+  explorCrosswBackBtn: {
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  errorText: {
+  explorCrosswErrorText: {
     color: '#fff',
     fontSize: 16,
   },
-  scroll: { flex: 1 },
-  scrollContent: {
+  explorCrosswScroll: {
+    flex: 1,
+  },
+  explorCrosswScrollContent: {
     paddingBottom: 24,
   },
-  headerRow: {
+  explorCrosswContentCard: {
+    borderRadius: 22,
+    backgroundColor: '#1C1E22A6',
+    borderWidth: 1,
+    borderColor: '#2A2D33',
+    padding: 20,
+    paddingVertical: 4,
+    paddingTop: 0,
+  },
+  explorCrosswHeaderRow: {
     flexDirection: 'row',
     marginBottom: 16,
     gap: 12,
   },
-  thumb: {
+  explorCrosswThumb: {
     width: 135,
     height: 135,
     borderRadius: 23,
     left: -20,
   },
-  titleWrap: {
+  explorCrosswTitleWrap: {
     flex: 1,
     justifyContent: 'center',
   },
-  title: {
+  explorCrosswTitle: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
   },
-  body: {
+  explorCrosswBody: {
     color: '#fff',
     fontSize: 12,
     lineHeight: 18,
     fontWeight: '400',
     marginBottom: 20,
   },
-  quizLabel: {
+  explorCrosswQuizLabel: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 6,
     textAlign: 'center',
   },
-  quizQuestion: {
+  explorCrosswQuizQuestion: {
     color: '#fff',
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 12,
     textAlign: 'center',
   },
-  trueFalseRow: {
+  explorCrosswTrueFalseRow: {
     flexDirection: 'row',
     gap: 24,
     marginBottom: 12,
     marginTop: 5,
     justifyContent: 'center',
   },
-  trueFalseBtn: {
+  explorCrosswTrueFalseBtn: {
     width: 98,
     height: 24,
     borderWidth: 1,
@@ -350,51 +449,51 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  trueFalseBtnText: {
+  explorCrosswTrueFalseBtnText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '500',
   },
-  trueFalseBtnCorrect: {
+  explorCrosswTrueFalseBtnCorrect: {
     backgroundColor: '#164D0B',
     borderColor: '#FFFFFF33',
   },
-  trueFalseBtnWrong: {
+  explorCrosswTrueFalseBtnWrong: {
     backgroundColor: '#4D0B0B',
     borderColor: '#FFFFFF33',
   },
-  trueFalseBtnDisabled: {
+  explorCrosswTrueFalseBtnDisabled: {
     opacity: 0.8,
   },
-  quizRewardText: {
+  explorCrosswQuizRewardText: {
     color: '#fff',
     fontSize: 13,
     fontWeight: '400',
     textAlign: 'center',
     marginTop: 3,
   },
-  quizWrongText: {
+  explorCrosswQuizWrongText: {
     color: '#fff',
     fontSize: 13,
     fontWeight: '400',
     textAlign: 'center',
     marginTop: 3,
   },
-  bottomBar: {
+  explorCrosswBottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
     paddingHorizontal: 4,
   },
-  bottomIcon: {
+  explorCrosswBottomIcon: {
     padding: 8,
   },
-  bottomIconImg: {
+  explorCrosswBottomIconImg: {
     width: 28,
     height: 28,
   },
-  testYourselfBtn: {
+  explorCrosswTestYourselfBtn: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: '#030051',
@@ -402,7 +501,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C9A24D',
   },
-  testYourselfBtnText: {
+  explorCrosswTestYourselfBtnText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '700',

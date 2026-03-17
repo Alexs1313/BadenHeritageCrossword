@@ -9,49 +9,68 @@ import {
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import BadenBackground from '../Heritagecomponents/BadenBackground';
+
 import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
+import ExplrrLayout from '../Heritagecomponents/ExplrrLayout';
 
 export default function CrosswordTopics() {
-  const nav = useNavigation<any>();
-  const { height } = useWindowDimensions();
+  const explorCrosswNav = useNavigation<any>();
+  const { height: explorCrosswHeight } = useWindowDimensions();
 
   return (
-    <BadenBackground>
-      <View style={[s.badnContainer, { paddingTop: height * 0.07 }]}>
-        <View style={s.topBadnHeadBar}>
+    <ExplrrLayout>
+      <View
+        style={[
+          explorCrosswStyles.explorCrosswBadnContainer,
+          { paddingTop: explorCrosswHeight * 0.07 },
+        ]}
+      >
+        <View style={explorCrosswStyles.explorCrosswTopBadnHeadBar}>
           <TouchableOpacity
-            onPress={() => nav.goBack()}
-            style={s.backBdnButn}
+            onPress={() => explorCrosswNav.goBack()}
+            style={explorCrosswStyles.explorCrosswBackBdnBtn}
             activeOpacity={0.5}
           >
             <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
           </TouchableOpacity>
 
-          <Text style={s.heritTtl}>Topics</Text>
+          <Text style={explorCrosswStyles.explorCrosswHeritTitle}>Topics</Text>
           <View style={{ width: 36 }} />
         </View>
 
-        {BADEN_CROSSWORDS.map(t => (
+        {BADEN_CROSSWORDS.map(explorCrosswTopic => (
           <TouchableOpacity
-            key={t.id}
-            style={s.badnCard}
-            onPress={() => nav.navigate('CrosswordLevels', { topicId: t.id })}
+            key={explorCrosswTopic.id}
+            style={explorCrosswStyles.explorCrosswBadnCard}
+            onPress={() =>
+              explorCrosswNav.navigate('CrosswordLevels', {
+                topicId: explorCrosswTopic.id,
+              })
+            }
             activeOpacity={0.9}
           >
-            <Image source={t.cover} style={s.cover} />
-            <Text style={s.badnCardText}>{t.title}</Text>
+            <Image
+              source={explorCrosswTopic.cover}
+              style={explorCrosswStyles.explorCrosswCover}
+            />
+            <Text style={explorCrosswStyles.explorCrosswBadnCardText}>
+              {explorCrosswTopic.title}
+            </Text>
             <Image source={require('../HeritageAssts/imgs/play.png')} />
           </TouchableOpacity>
         ))}
       </View>
-    </BadenBackground>
+    </ExplrrLayout>
   );
 }
 
-const s = StyleSheet.create({
-  badnContainer: { flex: 1, paddingHorizontal: 18 },
-  topBadnHeadBar: {
+const explorCrosswStyles = StyleSheet.create({
+  explorCrosswBadnContainer: {
+    flex: 1,
+    paddingHorizontal: 18,
+  },
+
+  explorCrosswTopBadnHeadBar: {
     paddingHorizontal: 5,
     flexDirection: 'row',
     alignItems: 'center',
@@ -59,23 +78,28 @@ const s = StyleSheet.create({
     marginBottom: 36,
   },
 
-  backBdnButn: {
+  explorCrosswBackBdnBtn: {
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  heritTtl: { color: '#fff', fontSize: 22, fontWeight: '700' },
+  explorCrosswHeritTitle: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+  },
 
-  badnTitle: {
+  explorCrosswBadnTitle: {
     color: '#FFFFFF',
     fontWeight: '700',
     fontSize: 22,
     textAlign: 'center',
     marginBottom: 18,
   },
-  badnCard: {
+
+  explorCrosswBadnCard: {
     backgroundColor: '#1C1E22A6',
     borderRadius: 20,
     borderWidth: 1,
@@ -88,6 +112,17 @@ const s = StyleSheet.create({
     padding: 10,
     justifyContent: 'space-between',
   },
-  cover: { width: 104, height: 104, borderRadius: 16, marginRight: 14 },
-  badnCardText: { color: '#FFFFFF', fontSize: 18, fontWeight: '700' },
+
+  explorCrosswCover: {
+    width: 104,
+    height: 104,
+    borderRadius: 16,
+    marginRight: 14,
+  },
+
+  explorCrosswBadnCardText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
 });

@@ -1,5 +1,3 @@
-import BadenBackground from './BadenBackground';
-
 import { useNavigation } from '@react-navigation/native';
 
 import React, { useCallback } from 'react';
@@ -17,67 +15,75 @@ import {
 
 // Utils
 import { BADEN_FACTS } from '../uttils/badenFacts';
+import ExplrrLayout from './ExplrrLayout';
 
-export default function BadenFactsScreen() {
-  const nav = useNavigation<any>();
-  const { height } = useWindowDimensions();
+export default function Explrfactsscrn() {
+  const explorCrosswNav = useNavigation<any>();
+  const { height: explorCrosswHeight } = useWindowDimensions();
 
-  const onShare = useCallback(async (text: string) => {
+  const explorCrosswOnShare = useCallback(async (explorCrosswText: string) => {
     try {
-      await Share.share({ message: text });
+      await Share.share({ message: explorCrosswText });
     } catch {}
   }, []);
 
-  const renderItem = useCallback(
+  const explorCrosswRenderItem = useCallback(
     ({ item }: { item: { id: string; text: string } }) => {
       return (
-        <View style={s.factCard}>
-          <Text style={s.factText}>{item.text}</Text>
+        <View style={explorCrosswStyles.explorCrosswFactCard}>
+          <Text style={explorCrosswStyles.explorCrosswFactText}>
+            {item.text}
+          </Text>
 
           <TouchableOpacity
-            style={s.shareBtn}
+            style={explorCrosswStyles.explorCrosswShareBtn}
             activeOpacity={0.6}
-            onPress={() => onShare(item.text)}
+            onPress={() => explorCrosswOnShare(item.text)}
           >
             <Image source={require('../HeritageAssts/imgs/s_btn.png')} />
           </TouchableOpacity>
         </View>
       );
     },
-    [onShare],
+    [explorCrosswOnShare],
   );
 
   return (
-    <BadenBackground>
-      <View style={[s.topBadenBar, { paddingTop: height * 0.07 }]}>
+    <ExplrrLayout>
+      <View
+        style={[
+          explorCrosswStyles.explorCrosswTopBadenBar,
+          { paddingTop: explorCrosswHeight * 0.07 },
+        ]}
+      >
         <TouchableOpacity
-          onPress={() => nav.goBack()}
-          style={s.backBadenBtn}
+          onPress={() => explorCrosswNav.goBack()}
+          style={explorCrosswStyles.explorCrosswBackBadenBtn}
           activeOpacity={0.5}
         >
           <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
         </TouchableOpacity>
 
-        <Text style={s.badenTitle}>Facts</Text>
+        <Text style={explorCrosswStyles.explorCrosswBadenTitle}>Facts</Text>
 
         <View style={{ width: 36 }} />
       </View>
 
       <FlatList
-        contentContainerStyle={s.bdnlist}
+        contentContainerStyle={explorCrosswStyles.explorCrosswBdnList}
         data={BADEN_FACTS}
-        keyExtractor={x => x.id}
-        renderItem={renderItem}
+        keyExtractor={explorCrosswItem => explorCrosswItem.id}
+        renderItem={explorCrosswRenderItem}
         scrollEnabled={false}
         ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
         showsVerticalScrollIndicator={false}
       />
-    </BadenBackground>
+    </ExplrrLayout>
   );
 }
 
-const s = StyleSheet.create({
-  topBadenBar: {
+const explorCrosswStyles = StyleSheet.create({
+  explorCrosswTopBadenBar: {
     paddingTop: 70,
     paddingHorizontal: 14,
     flexDirection: 'row',
@@ -86,17 +92,26 @@ const s = StyleSheet.create({
     marginBottom: 8,
   },
 
-  backBadenBtn: {
+  explorCrosswBackBadenBtn: {
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badenTitle: { color: '#fff', fontSize: 22, fontWeight: '700' },
 
-  bdnlist: { paddingHorizontal: 14, paddingTop: 15, paddingBottom: 28 },
+  explorCrosswBadenTitle: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+  },
 
-  factCard: {
+  explorCrosswBdnList: {
+    paddingHorizontal: 14,
+    paddingTop: 15,
+    paddingBottom: 28,
+  },
+
+  explorCrosswFactCard: {
     backgroundColor: '#1C1E22A6',
     borderRadius: 22,
     borderWidth: 1,
@@ -105,13 +120,15 @@ const s = StyleSheet.create({
     paddingLeft: 18,
     paddingRight: 56,
   },
-  factText: {
+
+  explorCrosswFactText: {
     color: '#fff',
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 20,
   },
-  shareBtn: {
+
+  explorCrosswShareBtn: {
     position: 'absolute',
     right: 14,
     top: 0,
@@ -121,15 +138,20 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  emptyFactsWrap: {
+  explorCrosswEmptyFactsWrap: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 18,
   },
-  emptyFactsImg: { width: 300, height: 340, resizeMode: 'contain' },
 
-  emptyFactsCard: {
+  explorCrosswEmptyFactsImg: {
+    width: 300,
+    height: 340,
+    resizeMode: 'contain',
+  },
+
+  explorCrosswEmptyFactsCard: {
     width: '100%',
     borderRadius: 22,
     backgroundColor: '#1c1e22ec',
@@ -139,13 +161,15 @@ const s = StyleSheet.create({
     paddingVertical: 24,
     marginTop: -10,
   },
-  emptyFactsTitle: {
+
+  explorCrosswEmptyFactsTitle: {
     color: '#fff',
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
   },
-  emptyFactsSub: {
+
+  explorCrosswEmptyFactsSub: {
     color: '#fff',
     marginTop: 18,
     textAlign: 'center',

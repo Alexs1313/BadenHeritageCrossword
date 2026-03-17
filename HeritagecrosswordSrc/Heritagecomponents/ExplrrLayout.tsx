@@ -1,6 +1,6 @@
 import { ImageBackground, ScrollView } from 'react-native';
 
-const BadenBackground = ({ children }: { children: React.ReactNode }) => {
+const ExplrrLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ImageBackground
       source={require('../HeritageAssts/imgs/baden_b.png')}
@@ -16,4 +16,4 @@ const BadenBackground = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default BadenBackground;
+export default ExplrrLayout;

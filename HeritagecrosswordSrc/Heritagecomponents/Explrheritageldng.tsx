@@ -104,18 +104,18 @@ const html = `
 </html>
 `;
 
-const BadenHeritageLdng = () => {
+const Explrheritageldng = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('BadenHeritageIntroduce');
+      navigation.replace('Explreritageintroduce');
     }, 5000);
   }, [navigation]);
 
   return (
     <ImageBackground
-      style={styles.badenContainer}
+      style={explorCrosswStyles.container}
       source={
         Platform.OS === 'ios'
           ? require('../HeritageAssts/imgs/heritagecroswrdbg.png')
@@ -123,14 +123,14 @@ const BadenHeritageLdng = () => {
       }
     >
       <ScrollView
-        contentContainerStyle={styles.badenContainerScroll}
+        contentContainerStyle={explorCrosswStyles.containerScroll}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.badenWebviewDock}>
+        <View style={explorCrosswStyles.webviewDock}>
           <WebView
             originWhitelist={['*']}
             source={{ html }}
-            style={styles.badenWebview}
+            style={explorCrosswStyles.webview}
             scrollEnabled={false}
           />
         </View>
@@ -139,29 +139,33 @@ const BadenHeritageLdng = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  badenContainer: { flex: 1 },
+const explorCrosswStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
 
-  badenContainerScroll: { flexGrow: 1 },
+  containerScroll: {
+    flexGrow: 1,
+  },
 
-  badenLogoWrap: {
+  logoWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: 650,
   },
 
-  badenWebviewDock: {
+  webviewDock: {
     alignSelf: 'center',
     position: 'absolute',
     bottom: 20,
   },
 
-  badenWebview: {
+  webview: {
     width: 360,
     height: 80,
     backgroundColor: 'transparent',
   },
 });
 
-export default BadenHeritageLdng;
+export default Explrheritageldng;

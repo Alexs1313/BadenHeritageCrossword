@@ -18,201 +18,303 @@ import {
 } from 'react-native';
 import { BADEN_CROSSWORDS, Difficulty } from '../uttils/badenCrosswords';
 import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
-import BadenBackground from '../Heritagecomponents/BadenBackground';
+
 import { BlurView } from '@react-native-community/blur';
 import { useBadenStore } from '../[Heritagecontxtt]/badenContext';
 import Toast from 'react-native-toast-message';
+import ExplrrLayout from '../Heritagecomponents/ExplrrLayout';
 
-type SlotState = 'idle' | 'correct' | 'wrong';
+type ExplorCrosswSlotState = 'idle' | 'correct' | 'wrong';
 
-function shuffle<T>(arr: T[]) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+function explorCrosswShuffle<T>(explorCrosswArr: T[]) {
+  const explorCrosswCopy = [...explorCrosswArr];
+  for (
+    let explorCrosswIndex = explorCrosswCopy.length - 1;
+    explorCrosswIndex > 0;
+    explorCrosswIndex--
+  ) {
+    const explorCrosswRandomIndex = Math.floor(
+      Math.random() * (explorCrosswIndex + 1),
+    );
+    [
+      explorCrosswCopy[explorCrosswIndex],
+      explorCrosswCopy[explorCrosswRandomIndex],
+    ] = [
+      explorCrosswCopy[explorCrosswRandomIndex],
+      explorCrosswCopy[explorCrosswIndex],
+    ];
   }
-  return a;
+  return explorCrosswCopy;
 }
 
-function buildLetterBank(answer: string) {
-  const base = answer.split('');
-  const extraPool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const extrasCount = Math.max(8, 16 - base.length);
-  const extras: string[] = [];
-  for (let i = 0; i < extrasCount; i++) {
-    extras.push(extraPool[Math.floor(Math.random() * extraPool.length)]);
+function explorCrosswBuildLetterBank(explorCrosswAnswer: string) {
+  const explorCrosswBase = explorCrosswAnswer.split('');
+  const explorCrosswExtraPool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const explorCrosswExtrasCount = Math.max(8, 16 - explorCrosswBase.length);
+  const explorCrosswExtras: string[] = [];
+
+  for (
+    let explorCrosswIndex = 0;
+    explorCrosswIndex < explorCrosswExtrasCount;
+    explorCrosswIndex++
+  ) {
+    explorCrosswExtras.push(
+      explorCrosswExtraPool[
+        Math.floor(Math.random() * explorCrosswExtraPool.length)
+      ],
+    );
   }
-  return shuffle([...base, ...extras]);
+
+  return explorCrosswShuffle([...explorCrosswBase, ...explorCrosswExtras]);
 }
 
 export default function CrosswordGameScreen() {
-  const nav = useNavigation<any>();
-  const route = useRoute<any>();
-  const { topicId, difficulty } = route.params as {
-    topicId: string;
-    difficulty: Difficulty;
-  };
+  const explorCrosswNav = useNavigation<any>();
+  const explorCrosswRoute = useRoute<any>();
+  const { topicId: explorCrosswTopicId, difficulty: explorCrosswDifficulty } =
+    explorCrosswRoute.params as {
+      topicId: string;
+      difficulty: Difficulty;
+    };
 
-  const topic = useMemo(
-    () => BADEN_CROSSWORDS.find(t => t.id === topicId)!,
-    [topicId],
+  const explorCrosswTopic = useMemo(
+    () =>
+      BADEN_CROSSWORDS.find(
+        explorCrosswTopicItem =>
+          explorCrosswTopicItem.id === explorCrosswTopicId,
+      )!,
+    [explorCrosswTopicId],
   );
 
-  const { coupons, applyWin, consumeCoupons, getTopicIndex, setTopicIndex } =
-    useCrosswordProgress();
+  const {
+    coupons: explorCrosswCoupons,
+    applyWin: explorCrosswApplyWin,
+    consumeCoupons: explorCrosswConsumeCoupons,
+    getTopicIndex: explorCrosswGetTopicIndex,
+    setTopicIndex: explorCrosswSetTopicIndex,
+  } = useCrosswordProgress();
 
-  const idx = getTopicIndex(topicId, difficulty);
-  const list = topic.levels[difficulty];
-  const item = list[Math.min(idx, list.length - 1)];
+  const explorCrosswIdx = explorCrosswGetTopicIndex(
+    explorCrosswTopicId,
+    explorCrosswDifficulty,
+  );
+  const explorCrosswList = explorCrosswTopic.levels[explorCrosswDifficulty];
+  const explorCrosswItem =
+    explorCrosswList[Math.min(explorCrosswIdx, explorCrosswList.length - 1)];
 
-  const answer = useMemo(() => item.answer.toUpperCase(), [item.answer]);
-
-  const [picked, setPicked] = useState<string[]>([]);
-  const [used, setUsed] = useState<Record<number, boolean>>({});
-  const [nextIdx, setNextIdx] = useState<number | null>(null);
-  const [hintUsed, setHintUsed] = useState(false);
-
-  const [slotState, setSlotState] = useState<SlotState[]>(
-    Array.from({ length: answer.length }, () => 'idle'),
+  const explorCrosswAnswer = useMemo(
+    () => explorCrosswItem.answer.toUpperCase(),
+    [explorCrosswItem.answer],
   );
 
-  const [showFireworks, setShowFireworks] = useState(false);
-  const fireworksTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [explorCrosswPicked, setExplorCrosswPicked] = useState<string[]>([]);
+  const [explorCrosswUsed, setExplorCrosswUsed] = useState<
+    Record<number, boolean>
+  >({});
+  const [explorCrosswNextIdx, setExplorCrosswNextIdx] = useState<number | null>(
+    null,
+  );
+  const [explorCrosswHintUsed, setExplorCrosswHintUsed] = useState(false);
 
-  const [showResult, setShowResult] = useState<null | {
+  const [explorCrosswSlotState, setExplorCrosswSlotState] = useState<
+    ExplorCrosswSlotState[]
+  >(Array.from({ length: explorCrosswAnswer.length }, () => 'idle'));
+
+  const [explorCrosswShowFireworks, setExplorCrosswShowFireworks] =
+    useState(false);
+  const explorCrosswFireworksTimer = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+
+  const [explorCrosswShowResult, setExplorCrosswShowResult] = useState<null | {
     ok: boolean;
     reward: number;
   }>(null);
-  const { isEnabledVibration, isEnabledNotifications } = useBadenStore();
-  const { height } = useWindowDimensions();
-  const bank = useMemo(() => buildLetterBank(answer), [answer]);
 
-  const canConfirm = picked.length === answer.length;
+  const {
+    isEnabledVibration: explorCrosswIsEnabledVibration,
+    isEnabledNotifications: explorCrosswIsEnabledNotifications,
+  } = useBadenStore();
 
-  const resetFireworksTimer = useCallback(() => {
-    if (fireworksTimer.current) clearTimeout(fireworksTimer.current);
-    fireworksTimer.current = null;
+  const { height: explorCrosswHeight } = useWindowDimensions();
+
+  const explorCrosswBank = useMemo(
+    () => explorCrosswBuildLetterBank(explorCrosswAnswer),
+    [explorCrosswAnswer],
+  );
+
+  const explorCrosswCanConfirm =
+    explorCrosswPicked.length === explorCrosswAnswer.length;
+
+  const explorCrosswResetFireworksTimer = useCallback(() => {
+    if (explorCrosswFireworksTimer.current) {
+      clearTimeout(explorCrosswFireworksTimer.current);
+    }
+    explorCrosswFireworksTimer.current = null;
   }, []);
 
   useEffect(() => {
-    setPicked([]);
-    setUsed({});
-    setNextIdx(null);
-    setHintUsed(false);
-    setShowResult(null);
-    setSlotState(Array.from({ length: answer.length }, () => 'idle'));
-    setShowFireworks(false);
-    resetFireworksTimer();
-  }, [answer, resetFireworksTimer]);
+    setExplorCrosswPicked([]);
+    setExplorCrosswUsed({});
+    setExplorCrosswNextIdx(null);
+    setExplorCrosswHintUsed(false);
+    setExplorCrosswShowResult(null);
+    setExplorCrosswSlotState(
+      Array.from({ length: explorCrosswAnswer.length }, () => 'idle'),
+    );
+    setExplorCrosswShowFireworks(false);
+    explorCrosswResetFireworksTimer();
+  }, [explorCrosswAnswer, explorCrosswResetFireworksTimer]);
 
   useEffect(() => {
     return () => {
-      resetFireworksTimer();
+      explorCrosswResetFireworksTimer();
     };
-  }, [resetFireworksTimer]);
+  }, [explorCrosswResetFireworksTimer]);
 
-  const flashSlot = useCallback((pos: number, state: SlotState) => {
-    setSlotState(prev => {
-      const next = [...prev];
-      next[pos] = state;
-      return next;
-    });
-
-    setTimeout(() => {
-      setSlotState(prev => {
-        const next = [...prev];
-
-        if (next[pos] === state) next[pos] = 'idle';
-        return next;
+  const explorCrosswFlashSlot = useCallback(
+    (explorCrosswPos: number, explorCrosswState: ExplorCrosswSlotState) => {
+      setExplorCrosswSlotState(explorCrosswPrev => {
+        const explorCrosswNext = [...explorCrosswPrev];
+        explorCrosswNext[explorCrosswPos] = explorCrosswState;
+        return explorCrosswNext;
       });
-    }, 450);
-  }, []);
 
-  const onPick = useCallback(
-    (letter: string, i: number) => {
-      if (used[i]) return;
-      if (picked.length >= answer.length) return;
+      setTimeout(() => {
+        setExplorCrosswSlotState(explorCrosswPrev => {
+          const explorCrosswNext = [...explorCrosswPrev];
 
-      const pos = picked.length;
-      const expected = answer[pos];
-      const okLetter = letter === expected;
+          if (explorCrosswNext[explorCrosswPos] === explorCrosswState) {
+            explorCrosswNext[explorCrosswPos] = 'idle';
+          }
 
-      setUsed(prev => ({ ...prev, [i]: true }));
-      setPicked(prev => [...prev, letter]);
-
-      if (okLetter) {
-        flashSlot(pos, 'correct');
-      } else {
-        // Vibration and flash for wrong answer
-        if (isEnabledVibration) {
-          Vibration.vibrate(180);
-        }
-        flashSlot(pos, 'wrong');
-      }
+          return explorCrosswNext;
+        });
+      }, 450);
     },
-    [used, picked.length, answer, flashSlot, isEnabledVibration],
+    [],
   );
 
-  const onBackspace = useCallback(() => {
-    if (picked.length === 0) return;
+  const explorCrosswOnPick = useCallback(
+    (explorCrosswLetter: string, explorCrosswIndex: number) => {
+      if (explorCrosswUsed[explorCrosswIndex]) return;
+      if (explorCrosswPicked.length >= explorCrosswAnswer.length) return;
 
-    const lastPos = picked.length - 1;
-    const lastLetter = picked[lastPos];
+      const explorCrosswPos = explorCrosswPicked.length;
+      const explorCrosswExpected = explorCrosswAnswer[explorCrosswPos];
+      const explorCrosswOkLetter = explorCrosswLetter === explorCrosswExpected;
 
-    setPicked(prev => prev.slice(0, -1));
+      setExplorCrosswUsed(explorCrosswPrev => ({
+        ...explorCrosswPrev,
+        [explorCrosswIndex]: true,
+      }));
+      setExplorCrosswPicked(explorCrosswPrev => [
+        ...explorCrosswPrev,
+        explorCrosswLetter,
+      ]);
 
-    setSlotState(prev => {
-      const next = [...prev];
-      next[lastPos] = 'idle';
-      return next;
+      if (explorCrosswOkLetter) {
+        explorCrosswFlashSlot(explorCrosswPos, 'correct');
+      } else {
+        if (explorCrosswIsEnabledVibration) {
+          Vibration.vibrate(180);
+        }
+        explorCrosswFlashSlot(explorCrosswPos, 'wrong');
+      }
+    },
+    [
+      explorCrosswUsed,
+      explorCrosswPicked.length,
+      explorCrosswAnswer,
+      explorCrosswFlashSlot,
+      explorCrosswIsEnabledVibration,
+    ],
+  );
+
+  const explorCrosswOnBackspace = useCallback(() => {
+    if (explorCrosswPicked.length === 0) return;
+
+    const explorCrosswLastPos = explorCrosswPicked.length - 1;
+    const explorCrosswLastLetter = explorCrosswPicked[explorCrosswLastPos];
+
+    setExplorCrosswPicked(explorCrosswPrev => explorCrosswPrev.slice(0, -1));
+
+    setExplorCrosswSlotState(explorCrosswPrev => {
+      const explorCrosswNext = [...explorCrosswPrev];
+      explorCrosswNext[explorCrosswLastPos] = 'idle';
+      return explorCrosswNext;
     });
 
-    setUsed(prev => {
-      const usedIdxs = Object.keys(prev)
-        .map(n => Number(n))
-        .filter(k => prev[k]);
+    setExplorCrosswUsed(explorCrosswPrev => {
+      const explorCrosswUsedIndexes = Object.keys(explorCrosswPrev)
+        .map(explorCrosswNum => Number(explorCrosswNum))
+        .filter(explorCrosswKey => explorCrosswPrev[explorCrosswKey]);
 
-      for (let t = usedIdxs.length - 1; t >= 0; t--) {
-        const k = usedIdxs[t];
-        if (bank[k] === lastLetter) {
-          const next = { ...prev };
-          next[k] = false;
-          return next;
+      for (
+        let explorCrosswIndex = explorCrosswUsedIndexes.length - 1;
+        explorCrosswIndex >= 0;
+        explorCrosswIndex--
+      ) {
+        const explorCrosswKey = explorCrosswUsedIndexes[explorCrosswIndex];
+        if (explorCrosswBank[explorCrosswKey] === explorCrosswLastLetter) {
+          const explorCrosswNext = { ...explorCrosswPrev };
+          explorCrosswNext[explorCrosswKey] = false;
+          return explorCrosswNext;
         }
       }
-      return prev;
+
+      return explorCrosswPrev;
     });
-  }, [picked, bank]);
+  }, [explorCrosswPicked, explorCrosswBank]);
 
-  const onHint = useCallback(async () => {
-    setHintUsed(true);
+  const explorCrosswOnHint = useCallback(async () => {
+    setExplorCrosswHintUsed(true);
 
-    const cost = 2;
-    if (coupons < cost) return;
-    if (picked.length >= answer.length) return;
+    const explorCrosswCost = 2;
+    if (explorCrosswCoupons < explorCrosswCost) return;
+    if (explorCrosswPicked.length >= explorCrosswAnswer.length) return;
 
-    const pos = picked.length;
-    const correct = answer[pos];
+    const explorCrosswPos = explorCrosswPicked.length;
+    const explorCrosswCorrect = explorCrosswAnswer[explorCrosswPos];
 
-    const bankIndex = bank.findIndex((l, i) => l === correct && !used[i]);
-    if (bankIndex < 0) return;
+    const explorCrosswBankIndex = explorCrosswBank.findIndex(
+      (explorCrosswLetter, explorCrosswIndex) =>
+        explorCrosswLetter === explorCrosswCorrect &&
+        !explorCrosswUsed[explorCrosswIndex],
+    );
 
-    await consumeCoupons(cost);
+    if (explorCrosswBankIndex < 0) return;
 
-    setUsed(prev => ({ ...prev, [bankIndex]: true }));
-    setPicked(prev => [...prev, correct]);
+    await explorCrosswConsumeCoupons(explorCrosswCost);
 
-    flashSlot(pos, 'correct');
-  }, [coupons, consumeCoupons, picked.length, answer, bank, used, flashSlot]);
+    setExplorCrosswUsed(explorCrosswPrev => ({
+      ...explorCrosswPrev,
+      [explorCrosswBankIndex]: true,
+    }));
+    setExplorCrosswPicked(explorCrosswPrev => [
+      ...explorCrosswPrev,
+      explorCrosswCorrect,
+    ]);
 
-  const onConfirm = useCallback(async () => {
-    if (!canConfirm) return;
+    explorCrosswFlashSlot(explorCrosswPos, 'correct');
+  }, [
+    explorCrosswCoupons,
+    explorCrosswConsumeCoupons,
+    explorCrosswPicked.length,
+    explorCrosswAnswer,
+    explorCrosswBank,
+    explorCrosswUsed,
+    explorCrosswFlashSlot,
+  ]);
 
-    const attempt = picked.join('');
-    const ok = attempt === answer;
+  const explorCrosswOnConfirm = useCallback(async () => {
+    if (!explorCrosswCanConfirm) return;
 
-    if (ok) {
-      isEnabledNotifications &&
+    const explorCrosswAttempt = explorCrosswPicked.join('');
+    const explorCrosswOk = explorCrosswAttempt === explorCrosswAnswer;
+
+    if (explorCrosswOk) {
+      explorCrosswIsEnabledNotifications &&
         Toast.show({
           type: 'success',
           text1: 'Correct Answer!',
@@ -220,94 +322,136 @@ export default function CrosswordGameScreen() {
           position: 'bottom',
         });
 
-      setShowFireworks(true);
-      resetFireworksTimer();
-      fireworksTimer.current = setTimeout(() => {
-        setShowFireworks(false);
+      setExplorCrosswShowFireworks(true);
+      explorCrosswResetFireworksTimer();
+      explorCrosswFireworksTimer.current = setTimeout(() => {
+        setExplorCrosswShowFireworks(false);
       }, 4000);
 
-      const { reward } = await applyWin(topicId, difficulty, idx, {
-        usedHint: hintUsed,
-      });
+      const { reward: explorCrosswReward } = await explorCrosswApplyWin(
+        explorCrosswTopicId,
+        explorCrosswDifficulty,
+        explorCrosswIdx,
+        {
+          usedHint: explorCrosswHintUsed,
+        },
+      );
 
-      const n = (idx + 1) % list.length;
-      setNextIdx(n);
-      setShowResult({ ok: true, reward });
+      const explorCrosswNewNextIdx =
+        (explorCrosswIdx + 1) % explorCrosswList.length;
+      setExplorCrosswNextIdx(explorCrosswNewNextIdx);
+      setExplorCrosswShowResult({
+        ok: true,
+        reward: explorCrosswReward,
+      });
       return;
     }
 
-    if (isEnabledVibration) {
+    if (explorCrosswIsEnabledVibration) {
       Vibration.vibrate(280);
     }
 
-    setShowResult({ ok: false, reward: 0 });
+    setExplorCrosswShowResult({ ok: false, reward: 0 });
   }, [
-    canConfirm,
-    picked,
-    answer,
-    applyWin,
-    topicId,
-    difficulty,
-    idx,
-    list.length,
-    hintUsed,
-    resetFireworksTimer,
-    isEnabledNotifications,
-    isEnabledVibration,
+    explorCrosswCanConfirm,
+    explorCrosswPicked,
+    explorCrosswAnswer,
+    explorCrosswApplyWin,
+    explorCrosswTopicId,
+    explorCrosswDifficulty,
+    explorCrosswIdx,
+    explorCrosswList.length,
+    explorCrosswHintUsed,
+    explorCrosswResetFireworksTimer,
+    explorCrosswIsEnabledNotifications,
+    explorCrosswIsEnabledVibration,
   ]);
 
-  const resetTry = useCallback(() => {
-    setPicked([]);
-    setUsed({});
-    setShowResult(null);
-    setHintUsed(false);
-    setSlotState(Array.from({ length: answer.length }, () => 'idle'));
-  }, [answer.length]);
+  const explorCrosswResetTry = useCallback(() => {
+    setExplorCrosswPicked([]);
+    setExplorCrosswUsed({});
+    setExplorCrosswShowResult(null);
+    setExplorCrosswHintUsed(false);
+    setExplorCrosswSlotState(
+      Array.from({ length: explorCrosswAnswer.length }, () => 'idle'),
+    );
+  }, [explorCrosswAnswer.length]);
 
-  const goNext = useCallback(async () => {
-    if (nextIdx === 0) {
-      nav.navigate('CrosswordTopics');
+  const explorCrosswGoNext = useCallback(async () => {
+    if (explorCrosswNextIdx === 0) {
+      explorCrosswNav.navigate('CrosswordTopics');
       return;
     }
-    if (nextIdx !== null) {
-      await setTopicIndex(topicId, difficulty, nextIdx);
+
+    if (explorCrosswNextIdx !== null) {
+      await explorCrosswSetTopicIndex(
+        explorCrosswTopicId,
+        explorCrosswDifficulty,
+        explorCrosswNextIdx,
+      );
     }
-    setHintUsed(false);
 
-    setPicked([]);
-    setUsed({});
-    setShowResult(null);
-    setNextIdx(null);
-    setSlotState(Array.from({ length: answer.length }, () => 'idle'));
-  }, [nextIdx, setTopicIndex, topicId, difficulty, answer.length, nav]);
+    setExplorCrosswHintUsed(false);
+    setExplorCrosswPicked([]);
+    setExplorCrosswUsed({});
+    setExplorCrosswShowResult(null);
+    setExplorCrosswNextIdx(null);
+    setExplorCrosswSlotState(
+      Array.from({ length: explorCrosswAnswer.length }, () => 'idle'),
+    );
+  }, [
+    explorCrosswNextIdx,
+    explorCrosswSetTopicIndex,
+    explorCrosswTopicId,
+    explorCrosswDifficulty,
+    explorCrosswAnswer.length,
+    explorCrosswNav,
+  ]);
 
-  const slotStyleFor = useCallback((st: SlotState) => {
-    if (st === 'correct') return s.badenSlotCorrect;
-    if (st === 'wrong') return s.badenSlotWrong;
-    return null;
-  }, []);
+  const explorCrosswSlotStyleFor = useCallback(
+    (explorCrosswState: ExplorCrosswSlotState) => {
+      if (explorCrosswState === 'correct') {
+        return explorCrosswStyles.explorCrosswBadenSlotCorrect;
+      }
+      if (explorCrosswState === 'wrong') {
+        return explorCrosswStyles.explorCrosswBadenSlotWrong;
+      }
+      return null;
+    },
+    [],
+  );
 
   return (
-    <BadenBackground>
-      <View style={[s.topHeadBar, { paddingTop: height * 0.07 }]}>
+    <ExplrrLayout>
+      <View
+        style={[
+          explorCrosswStyles.explorCrosswTopHeadBar,
+          { paddingTop: explorCrosswHeight * 0.07 },
+        ]}
+      >
         <TouchableOpacity
-          onPress={() => nav.goBack()}
-          style={s.backButn}
+          onPress={() => explorCrosswNav.goBack()}
+          style={explorCrosswStyles.explorCrosswBackBtn}
           activeOpacity={0.5}
         >
           <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
         </TouchableOpacity>
 
-        <Text style={s.badenTtl}>Crosswords</Text>
-        <View style={s.badenCoupons}>
+        <Text style={explorCrosswStyles.explorCrosswBadenTitle}>
+          Crosswords
+        </Text>
+
+        <View style={explorCrosswStyles.explorCrosswBadenCoupons}>
           <Image source={require('../HeritageAssts/imgs/head_coup.png')} />
-          <Text style={s.badenCouponTxt}>X {coupons}</Text>
+          <Text style={explorCrosswStyles.explorCrosswBadenCouponTxt}>
+            X {explorCrosswCoupons}
+          </Text>
         </View>
       </View>
 
-      <View style={s.badenCrd}>
+      <View style={explorCrosswStyles.explorCrosswBadenCard}>
         <Image
-          source={topic.cover}
+          source={explorCrosswTopic.cover}
           style={{
             width: 180,
             height: 180,
@@ -317,68 +461,106 @@ export default function CrosswordGameScreen() {
           }}
         />
 
-        <Text style={s.badenClue}>{item.clue}</Text>
+        <Text style={explorCrosswStyles.explorCrosswBadenClue}>
+          {explorCrosswItem.clue}
+        </Text>
       </View>
 
-      <View style={s.slotsRow}>
-        {Array.from({ length: answer.length }).map((_, i) => (
-          <View key={i} style={[s.badenSlot, slotStyleFor(slotState[i])]}>
-            <Text style={s.badenSlotTxt}>{picked[i] ?? ''}</Text>
-          </View>
-        ))}
+      <View style={explorCrosswStyles.explorCrosswSlotsRow}>
+        {Array.from({ length: explorCrosswAnswer.length }).map(
+          (_, explorCrosswIndex) => (
+            <View
+              key={explorCrosswIndex}
+              style={[
+                explorCrosswStyles.explorCrosswBadenSlot,
+                explorCrosswSlotStyleFor(
+                  explorCrosswSlotState[explorCrosswIndex],
+                ),
+              ]}
+            >
+              <Text style={explorCrosswStyles.explorCrosswBadenSlotTxt}>
+                {explorCrosswPicked[explorCrosswIndex] ?? ''}
+              </Text>
+            </View>
+          ),
+        )}
       </View>
 
-      <View style={s.badenBank}>
-        {bank.map((l, i) => {
-          const isUsed = !!used[i];
+      <View style={explorCrosswStyles.explorCrosswBadenBank}>
+        {explorCrosswBank.map((explorCrosswLetter, explorCrosswIndex) => {
+          const explorCrosswIsUsed = !!explorCrosswUsed[explorCrosswIndex];
+
           return (
             <TouchableOpacity
-              key={`${l}-${i}`}
+              key={`${explorCrosswLetter}-${explorCrosswIndex}`}
               activeOpacity={0.85}
-              onPress={() => onPick(l, i)}
-              disabled={isUsed}
-              style={[s.badenLetterBtn, { opacity: isUsed ? 0.35 : 1 }]}
+              onPress={() =>
+                explorCrosswOnPick(explorCrosswLetter, explorCrosswIndex)
+              }
+              disabled={explorCrosswIsUsed}
+              style={[
+                explorCrosswStyles.explorCrosswBadenLetterBtn,
+                { opacity: explorCrosswIsUsed ? 0.35 : 1 },
+              ]}
             >
-              <Text style={s.badenLetterTxt}>{l}</Text>
+              <Text style={explorCrosswStyles.explorCrosswBadenLetterTxt}>
+                {explorCrosswLetter}
+              </Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
-      <View style={s.bottomRow}>
+      <View style={explorCrosswStyles.explorCrosswBottomRow}>
         <TouchableOpacity
-          onPress={onHint}
+          onPress={explorCrosswOnHint}
           activeOpacity={0.9}
-          style={[s.badenHintBtn, { opacity: coupons >= 2 ? 1 : 0.5 }]}
+          style={[
+            explorCrosswStyles.explorCrosswBadenHintBtn,
+            { opacity: explorCrosswCoupons >= 2 ? 1 : 0.5 },
+          ]}
         >
-          <Text style={s.badenHintTxt}>Hint for 2</Text>
+          <Text style={explorCrosswStyles.explorCrosswBadenHintTxt}>
+            Hint for 2
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={onConfirm}
+          onPress={explorCrosswOnConfirm}
           activeOpacity={0.9}
-          style={[s.badenConfirmBtn, { opacity: canConfirm ? 1 : 0.5 }]}
-          disabled={!canConfirm}
+          style={[
+            explorCrosswStyles.explorCrosswBadenConfirmBtn,
+            { opacity: explorCrosswCanConfirm ? 1 : 0.5 },
+          ]}
+          disabled={!explorCrosswCanConfirm}
         >
-          <Text style={s.badenConfirmTxt}>Confirm</Text>
+          <Text style={explorCrosswStyles.explorCrosswBadenConfirmTxt}>
+            Confirm
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={onBackspace} style={s.backspace}>
+        <TouchableOpacity
+          onPress={explorCrosswOnBackspace}
+          style={explorCrosswStyles.explorCrosswBackspace}
+        >
           <Image source={require('../HeritageAssts/imgs/clear.png')} />
         </TouchableOpacity>
       </View>
 
-      {showFireworks && (
-        <View style={s.fireworksWrap} pointerEvents="none">
+      {explorCrosswShowFireworks && (
+        <View
+          style={explorCrosswStyles.explorCrosswFireworksWrap}
+          pointerEvents="none"
+        >
           <Image
             source={require('../HeritageAssts/imgs/GreenFirework.gif')}
-            style={s.fireworksGif}
+            style={explorCrosswStyles.explorCrosswFireworksGif}
           />
         </View>
       )}
 
-      {showResult && (
-        <View style={s.overlay}>
+      {explorCrosswShowResult && (
+        <View style={explorCrosswStyles.explorCrosswOverlay}>
           {Platform.OS === 'android' && (
             <BlurView
               blurType="dark"
@@ -392,66 +574,85 @@ export default function CrosswordGameScreen() {
               }}
             />
           )}
-          <View style={s.modal}>
-            <Text style={s.modalTitle}>
-              {showResult.ok ? 'Well Done! Crossword complete' : 'Try Again'}
+
+          <View style={explorCrosswStyles.explorCrosswModal}>
+            <Text style={explorCrosswStyles.explorCrosswModalTitle}>
+              {explorCrosswShowResult.ok
+                ? 'Well Done! Crossword complete'
+                : 'Try Again'}
             </Text>
 
-            {showResult.ok ? (
+            {explorCrosswShowResult.ok ? (
               <>
-                <Text style={s.modalSub}>
-                  {showResult.reward} coupons collected
+                <Text style={explorCrosswStyles.explorCrosswModalSub}>
+                  {explorCrosswShowResult.reward} coupons collected
                 </Text>
-                <Text style={s.fact}>{item.fact}</Text>
+                <Text style={explorCrosswStyles.explorCrosswFact}>
+                  {explorCrosswItem.fact}
+                </Text>
 
                 <TouchableOpacity
-                  style={s.nextBtn}
-                  onPress={goNext}
+                  style={explorCrosswStyles.explorCrosswNextBtn}
+                  onPress={explorCrosswGoNext}
                   activeOpacity={0.9}
                 >
-                  <Text style={s.nextTxt}>Next Crossword</Text>
+                  <Text style={explorCrosswStyles.explorCrosswNextTxt}>
+                    Next Crossword
+                  </Text>
                 </TouchableOpacity>
               </>
             ) : (
               <>
-                <Text style={s.fact}>Wrong answer. Please try again.</Text>
+                <Text style={explorCrosswStyles.explorCrosswFact}>
+                  Wrong answer. Please try again.
+                </Text>
                 <TouchableOpacity
-                  style={s.nextBtn}
-                  onPress={resetTry}
+                  style={explorCrosswStyles.explorCrosswNextBtn}
+                  onPress={explorCrosswResetTry}
                   activeOpacity={0.9}
                 >
-                  <Text style={s.nextTxt}>Continue</Text>
+                  <Text style={explorCrosswStyles.explorCrosswNextTxt}>
+                    Continue
+                  </Text>
                 </TouchableOpacity>
               </>
             )}
           </View>
         </View>
       )}
-    </BadenBackground>
+    </ExplrrLayout>
   );
 }
 
-const s = StyleSheet.create({
-  badenCoupons: {
+const explorCrosswStyles = StyleSheet.create({
+  explorCrosswBadenCoupons: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  badenCouponTxt: { color: '#fff', fontWeight: '700', fontSize: 18 },
-  topHeadBar: {
+
+  explorCrosswBadenCouponTxt: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 18,
+  },
+
+  explorCrosswTopHeadBar: {
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 36,
   },
-  backButn: {
+
+  explorCrosswBackBtn: {
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badenTtl: {
+
+  explorCrosswBadenTitle: {
     flex: 1,
     textAlign: 'center',
     color: '#fff',
@@ -459,7 +660,7 @@ const s = StyleSheet.create({
     fontWeight: '800',
   },
 
-  badenCrd: {
+  explorCrosswBadenCard: {
     marginTop: 14,
     marginHorizontal: 24,
     borderRadius: 22,
@@ -469,21 +670,23 @@ const s = StyleSheet.create({
     borderColor: '#2A2D33',
     paddingBottom: 30,
   },
-  badenClue: {
+
+  explorCrosswBadenClue: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '800',
     textAlign: 'center',
   },
 
-  slotsRow: {
+  explorCrosswSlotsRow: {
     marginTop: 34,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
     paddingHorizontal: 12,
   },
-  badenSlot: {
+
+  explorCrosswBadenSlot: {
     width: 44,
     height: 44,
     borderRadius: 12,
@@ -494,19 +697,26 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
   },
-  badenSlotCorrect: {
+
+  explorCrosswBadenSlotCorrect: {
     backgroundColor: '#0B4B10',
     borderColor: '#C9A24D',
     borderWidth: 2,
   },
-  badenSlotWrong: {
+
+  explorCrosswBadenSlotWrong: {
     backgroundColor: '#510000',
     borderColor: '#C9A24D',
     borderWidth: 2,
   },
-  badenSlotTxt: { color: '#fff', fontSize: 16, fontWeight: '900' },
 
-  badenBank: {
+  explorCrosswBadenSlotTxt: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+
+  explorCrosswBadenBank: {
     marginTop: 14,
     marginHorizontal: 24,
     flexDirection: 'row',
@@ -514,7 +724,8 @@ const s = StyleSheet.create({
     gap: 10,
     justifyContent: 'center',
   },
-  badenLetterBtn: {
+
+  explorCrosswBadenLetterBtn: {
     width: 44,
     height: 44,
     borderRadius: 12,
@@ -524,9 +735,14 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badenLetterTxt: { color: '#fff', fontSize: 16, fontWeight: '900' },
 
-  bottomRow: {
+  explorCrosswBadenLetterTxt: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+
+  explorCrosswBottomRow: {
     marginTop: 16,
     marginHorizontal: 24,
     flexDirection: 'row',
@@ -535,7 +751,8 @@ const s = StyleSheet.create({
     gap: 10,
     marginBottom: 30,
   },
-  badenHintBtn: {
+
+  explorCrosswBadenHintBtn: {
     flex: 1,
     height: 44,
     borderRadius: 22,
@@ -545,9 +762,13 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badenHintTxt: { color: '#fff', fontWeight: '900' },
 
-  badenConfirmBtn: {
+  explorCrosswBadenHintTxt: {
+    color: '#fff',
+    fontWeight: '900',
+  },
+
+  explorCrosswBadenConfirmBtn: {
     flex: 1,
     height: 44,
     borderRadius: 22,
@@ -557,9 +778,13 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badenConfirmTxt: { color: '#fff', fontWeight: '900' },
 
-  backspace: {
+  explorCrosswBadenConfirmTxt: {
+    color: '#fff',
+    fontWeight: '900',
+  },
+
+  explorCrosswBackspace: {
     width: 44,
     height: 44,
     borderRadius: 14,
@@ -568,7 +793,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  fireworksWrap: {
+  explorCrosswFireworksWrap: {
     position: 'absolute',
     left: 0,
     top: 0,
@@ -577,14 +802,15 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  fireworksGif: {
+
+  explorCrosswFireworksGif: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
     opacity: 0.9,
   },
 
-  overlay: {
+  explorCrosswOverlay: {
     position: 'absolute',
     left: 0,
     top: 0,
@@ -595,7 +821,8 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 18,
   },
-  modal: {
+
+  explorCrosswModal: {
     width: '100%',
     borderRadius: 26,
     backgroundColor: '#1C1E22',
@@ -603,20 +830,23 @@ const s = StyleSheet.create({
     borderColor: '#2A2D33',
     padding: 18,
   },
-  modalTitle: {
+
+  explorCrosswModalTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '900',
     textAlign: 'center',
   },
-  modalSub: {
+
+  explorCrosswModalSub: {
     color: '#fff',
     fontSize: 22,
     textAlign: 'center',
     marginTop: 6,
     fontWeight: '700',
   },
-  fact: {
+
+  explorCrosswFact: {
     color: '#fff',
     fontSize: 20,
     textAlign: 'center',
@@ -624,7 +854,8 @@ const s = StyleSheet.create({
     lineHeight: 20,
     fontStyle: 'italic',
   },
-  nextBtn: {
+
+  explorCrosswNextBtn: {
     marginTop: 14,
     height: 36,
     width: 140,
@@ -636,8 +867,14 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  nextTxt: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  small: {
+
+  explorCrosswNextTxt: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+
+  explorCrosswSmall: {
     color: '#fff',
     opacity: 0.5,
     textAlign: 'center',

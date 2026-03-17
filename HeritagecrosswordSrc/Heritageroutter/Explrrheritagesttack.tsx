@@ -1,32 +1,36 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import BadenHeritageLdng from '../Heritagecomponents/BadenHeritageLdng';
-import BadenHeritageIntroduce from '../Heritagecomponents/BadenHeritageIntroduce';
-import BadenHeritageHome from '../Heritagecomponents/BadenHeritageHome';
+
 import CrosswordTopics from './CrosswordTopics';
 import CrosswordLevels from './CrosswordLevels';
 import CrosswordGameScreen from './CrosswordGameScreen';
-import BadenWallpapersScreen from '../Heritagecomponents/BadenWallpapersScreen';
-import BadenFactsScreen from '../Heritagecomponents/BadenFactsScreen';
-import BadenAchievementsScreen from '../Heritagecomponents/BadenAchievementsScreen';
+
+import BadenFactsScreen from '../Heritagecomponents/Explrfactsscrn';
+
 import Exploreartclsscrn from '../Heritagecomponents/Exploreartclsscrn';
 import Exploreartclsscrndetails from '../Heritagecomponents/Exploreartclsscrndetails';
+import Explrrachievementsscrn from '../Heritagecomponents/Explrrachievementsscrn';
+import Explrfactsscrn from '../Heritagecomponents/Explrfactsscrn';
+import Explrrwallpapersscrn from '../Heritagecomponents/Explrrwallpapersscrn';
+import Explrheritageldng from '../Heritagecomponents/Explrheritageldng';
+import Explreritageintroduce from '../Heritagecomponents/Explreritageintroduce';
+import Explreritagehome from '../Heritagecomponents/Explreritagehome';
 
 const HeritageStck = createStackNavigator();
 
-const BadenHeritageStack = () => {
+const Explrrheritagesttack = () => {
   return (
     <HeritageStck.Navigator screenOptions={{ headerShown: false }}>
       <HeritageStck.Screen
-        name="BadenHeritageLdng"
-        component={BadenHeritageLdng}
+        name="Explrheritageldng"
+        component={Explrheritageldng}
       />
       <HeritageStck.Screen
-        name="BadenHeritageIntroduce"
-        component={BadenHeritageIntroduce}
+        name="Explreritageintroduce"
+        component={Explreritageintroduce}
       />
       <HeritageStck.Screen
-        name="BadenHeritageHome"
-        component={BadenHeritageHome}
+        name="Explreritagehome"
+        component={Explreritagehome}
       />
       <HeritageStck.Screen name="CrosswordTopics" component={CrosswordTopics} />
       <HeritageStck.Screen name="CrosswordLevels" component={CrosswordLevels} />
@@ -35,16 +39,17 @@ const BadenHeritageStack = () => {
         component={CrosswordGameScreen}
       />
       <HeritageStck.Screen
-        name="BadenWallpapersScreen"
-        component={BadenWallpapersScreen}
+        name="Explrrwallpapersscrn"
+        component={Explrrwallpapersscrn}
       />
       <HeritageStck.Screen
         name="BadenFactsScreen"
         component={BadenFactsScreen}
       />
+      <HeritageStck.Screen name="Explrfactsscrn" component={Explrfactsscrn} />
       <HeritageStck.Screen
-        name="BadenAchievementsScreen"
-        component={BadenAchievementsScreen}
+        name="Explrrachievementsscrn"
+        component={Explrrachievementsscrn}
       />
       <HeritageStck.Screen
         name="Exploreartclsscrn"
@@ -58,4 +63,4 @@ const BadenHeritageStack = () => {
   );
 };
 
-export default BadenHeritageStack;
+export default Explrrheritagesttack;

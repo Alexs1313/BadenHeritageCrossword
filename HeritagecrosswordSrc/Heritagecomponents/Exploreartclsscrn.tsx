@@ -15,111 +15,153 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BadenBackground from './BadenBackground';
 
-const SAVED_KEY = '@baden_explore_saved_v1';
-const DEFAULT_THUMB = require('../HeritageAssts/imgs/walp1.png');
+import ExplrrLayout from './ExplrrLayout';
 
-type SavedSet = Record<string, true>;
+const explorCrosswSavedKey = '@baden_explore_saved_v1';
+const explorCrosswDefaultThumb = require('../HeritageAssts/imgs/walp1.png');
+
+type ExplorCrosswSavedSet = Record<string, true>;
 
 export default function Exploreartclsscrn() {
-  const nav = useNavigation<any>();
-  const { height } = useWindowDimensions();
-  const [tab, setTab] = useState<'all' | 'saved'>('all');
-  const [savedIds, setSavedIds] = useState<SavedSet>({});
+  const explorCrosswNav = useNavigation<any>();
+  const { height: explorCrosswHeight } = useWindowDimensions();
+  const [explorCrosswTab, setExplorCrosswTab] = useState<'all' | 'saved'>(
+    'all',
+  );
+  const [explorCrosswSavedIds, setExplorCrosswSavedIds] =
+    useState<ExplorCrosswSavedSet>({});
 
-  const loadSaved = useCallback(async () => {
+  const explorCrosswLoadSaved = useCallback(async () => {
     try {
-      const raw = await AsyncStorage.getItem(SAVED_KEY);
-      setSavedIds(raw ? JSON.parse(raw) : {});
+      const explorCrosswRaw = await AsyncStorage.getItem(explorCrosswSavedKey);
+      setExplorCrosswSavedIds(
+        explorCrosswRaw ? JSON.parse(explorCrosswRaw) : {},
+      );
     } catch {
-      setSavedIds({});
+      setExplorCrosswSavedIds({});
     }
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      loadSaved();
-    }, [loadSaved]),
+      explorCrosswLoadSaved();
+    }, [explorCrosswLoadSaved]),
   );
 
-  const toggleSaved = useCallback(
-    async (id: string) => {
-      const next: SavedSet = { ...savedIds };
-      if (next[id]) delete next[id];
-      else next[id] = true;
-      setSavedIds(next);
-      await AsyncStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  const explorCrosswToggleSaved = useCallback(
+    async (explorCrosswId: string) => {
+      const explorCrosswNext: ExplorCrosswSavedSet = {
+        ...explorCrosswSavedIds,
+      };
+
+      if (explorCrosswNext[explorCrosswId])
+        delete explorCrosswNext[explorCrosswId];
+      else explorCrosswNext[explorCrosswId] = true;
+
+      setExplorCrosswSavedIds(explorCrosswNext);
+      await AsyncStorage.setItem(
+        explorCrosswSavedKey,
+        JSON.stringify(explorCrosswNext),
+      );
     },
-    [savedIds],
+    [explorCrosswSavedIds],
   );
 
-  const isSaved = useCallback((id: string) => !!savedIds[id], [savedIds]);
-
-  const savedList = useMemo(
-    () => BADEN_EXPLORE_ARTICLES.filter(a => savedIds[a.id]),
-    [savedIds],
+  const explorCrosswIsSaved = useCallback(
+    (explorCrosswId: string) => !!explorCrosswSavedIds[explorCrosswId],
+    [explorCrosswSavedIds],
   );
 
-  const listData = tab === 'all' ? BADEN_EXPLORE_ARTICLES : savedList;
+  const explorCrosswSavedList = useMemo(
+    () =>
+      BADEN_EXPLORE_ARTICLES.filter(
+        explorCrosswArticle => explorCrosswSavedIds[explorCrosswArticle.id],
+      ),
+    [explorCrosswSavedIds],
+  );
 
-  const onShare = useCallback(async (article: ExploreArticle) => {
-    try {
-      await Share.share({
-        message: `${article.title}\n\n${article.body}\n\nTrue / False\n${
-          article.quizQuestion
-        } (${article.quizAnswer ? 'True' : 'False'})`,
+  const explorCrosswListData =
+    explorCrosswTab === 'all' ? BADEN_EXPLORE_ARTICLES : explorCrosswSavedList;
+
+  const explorCrosswOnShare = useCallback(
+    async (explorCrosswArticle: ExploreArticle) => {
+      try {
+        await Share.share({
+          message: `${explorCrosswArticle.title}\n\n${
+            explorCrosswArticle.body
+          }\n\nTrue / False\n${explorCrosswArticle.quizQuestion} (${
+            explorCrosswArticle.quizAnswer ? 'True' : 'False'
+          })`,
+        });
+      } catch {}
+    },
+    [],
+  );
+
+  const explorCrosswOpenArticle = useCallback(
+    (explorCrosswArticle: ExploreArticle) => {
+      explorCrosswNav.navigate('Exploreartclsscrndetails', {
+        articleId: explorCrosswArticle.id,
       });
-    } catch {}
-  }, []);
-
-  const openArticle = useCallback(
-    (article: ExploreArticle) => {
-      nav.navigate('Exploreartclsscrndetails', { articleId: article.id });
     },
-    [nav],
+    [explorCrosswNav],
   );
 
-  const renderCard = useCallback(
+  const explorCrosswRenderCard = useCallback(
     ({ item }: { item: ExploreArticle }) => {
-      const saved = isSaved(item.id);
-      const thumb = item.thumb ?? DEFAULT_THUMB;
+      const explorCrosswSaved = explorCrosswIsSaved(item.id);
+      const explorCrosswThumb = item.thumb ?? explorCrosswDefaultThumb;
+
       return (
-        <View style={s.card}>
-          <Image source={thumb} style={s.thumb} resizeMode="cover" />
-          <View style={s.cardRight}>
-            <Text style={s.cardTitle} numberOfLines={2}>
+        <View style={explorCrosswStyles.explorCrosswCard}>
+          <Image
+            source={explorCrosswThumb}
+            style={explorCrosswStyles.explorCrosswThumb}
+            resizeMode="cover"
+          />
+
+          <View style={explorCrosswStyles.explorCrosswCardRight}>
+            <Text
+              style={explorCrosswStyles.explorCrosswCardTitle}
+              numberOfLines={2}
+            >
               {item.title}
             </Text>
-            <View style={s.cardActions}>
+
+            <View style={explorCrosswStyles.explorCrosswCardActions}>
               <TouchableOpacity
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                onPress={() => toggleSaved(item.id)}
-                style={s.iconBtn}
+                onPress={() => explorCrosswToggleSaved(item.id)}
+                style={explorCrosswStyles.explorCrosswIconBtn}
               >
                 <Image
                   source={
-                    saved
+                    explorCrosswSaved
                       ? require('../HeritageAssts/imgs/heritagecnartcsvd.png')
                       : require('../HeritageAssts/imgs/heritagecnartcsv.png')
                   }
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={s.openBtn}
-                onPress={() => openArticle(item)}
+                style={explorCrosswStyles.explorCrosswOpenBtn}
+                onPress={() => explorCrosswOpenArticle(item)}
                 activeOpacity={0.8}
               >
-                <Text style={s.openBtnText}>Open</Text>
+                <Text style={explorCrosswStyles.explorCrosswOpenBtnText}>
+                  Open
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                onPress={() => onShare(item)}
-                style={s.iconBtn}
+                onPress={() => explorCrosswOnShare(item)}
+                style={explorCrosswStyles.explorCrosswIconBtn}
               >
                 <Image
                   source={require('../HeritageAssts/imgs/s_btn.png')}
-                  style={s.shareIcon}
+                  style={explorCrosswStyles.explorCrosswShareIcon}
                 />
               </TouchableOpacity>
             </View>
@@ -127,42 +169,70 @@ export default function Exploreartclsscrn() {
         </View>
       );
     },
-    [isSaved, toggleSaved, openArticle, onShare],
+    [
+      explorCrosswIsSaved,
+      explorCrosswToggleSaved,
+      explorCrosswOpenArticle,
+      explorCrosswOnShare,
+    ],
   );
 
-  const showEmptySaved = tab === 'saved' && savedList.length === 0;
+  const explorCrosswShowEmptySaved =
+    explorCrosswTab === 'saved' && explorCrosswSavedList.length === 0;
 
   return (
-    <BadenBackground>
-      <View style={[s.container, { paddingTop: height * 0.07 }]}>
-        <View style={s.header}>
+    <ExplrrLayout>
+      <View
+        style={[
+          explorCrosswStyles.explorCrosswContainer,
+          { paddingTop: explorCrosswHeight * 0.07 },
+        ]}
+      >
+        <View style={explorCrosswStyles.explorCrosswHeader}>
           <TouchableOpacity
-            onPress={() => nav.goBack()}
-            style={s.backBtn}
+            onPress={() => explorCrosswNav.goBack()}
+            style={explorCrosswStyles.explorCrosswBackBtn}
             activeOpacity={0.5}
           >
             <Image source={require('../HeritageAssts/imgs/back_ar.png')} />
           </TouchableOpacity>
 
-          <View style={s.segmentWrap}>
+          <View style={explorCrosswStyles.explorCrosswSegmentWrap}>
             <TouchableOpacity
-              style={[s.segment, tab === 'all' && s.segmentActive]}
-              onPress={() => setTab('all')}
+              style={[
+                explorCrosswStyles.explorCrosswSegment,
+                explorCrosswTab === 'all' &&
+                  explorCrosswStyles.explorCrosswSegmentActive,
+              ]}
+              onPress={() => setExplorCrosswTab('all')}
               activeOpacity={0.8}
             >
               <Text
-                style={[s.segmentText, tab === 'all' && s.segmentTextActive]}
+                style={[
+                  explorCrosswStyles.explorCrosswSegmentText,
+                  explorCrosswTab === 'all' &&
+                    explorCrosswStyles.explorCrosswSegmentTextActive,
+                ]}
               >
                 All
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
-              style={[s.segment, tab === 'saved' && s.segmentActive]}
-              onPress={() => setTab('saved')}
+              style={[
+                explorCrosswStyles.explorCrosswSegment,
+                explorCrosswTab === 'saved' &&
+                  explorCrosswStyles.explorCrosswSegmentActive,
+              ]}
+              onPress={() => setExplorCrosswTab('saved')}
               activeOpacity={0.8}
             >
               <Text
-                style={[s.segmentText, tab === 'saved' && s.segmentTextActive]}
+                style={[
+                  explorCrosswStyles.explorCrosswSegmentText,
+                  explorCrosswTab === 'saved' &&
+                    explorCrosswStyles.explorCrosswSegmentTextActive,
+                ]}
               >
                 Saved
               </Text>
@@ -172,65 +242,71 @@ export default function Exploreartclsscrn() {
           <View style={{ width: 36 }} />
         </View>
 
-        {showEmptySaved ? (
-          <View style={s.emptyWrap}>
+        {explorCrosswShowEmptySaved ? (
+          <View style={explorCrosswStyles.explorCrosswEmptyWrap}>
             <Image
               source={require('../HeritageAssts/imgs/facts_girl.png')}
-              style={s.emptyImg}
+              style={explorCrosswStyles.explorCrosswEmptyImg}
               resizeMode="contain"
             />
-            <View style={s.emptyCard}>
-              <Text style={s.emptyTitle}>No saved articles yet</Text>
-              <Text style={s.emptySub}>
+
+            <View style={explorCrosswStyles.explorCrosswEmptyCard}>
+              <Text style={explorCrosswStyles.explorCrosswEmptyTitle}>
+                No saved articles yet
+              </Text>
+              <Text style={explorCrosswStyles.explorCrosswEmptySub}>
                 You haven't saved any articles. Explore the stories of
                 Baden-Baden and save the ones you want to read later.
               </Text>
             </View>
+
             <TouchableOpacity
-              style={s.exploreBtn}
-              onPress={() => setTab('all')}
+              style={explorCrosswStyles.explorCrosswExploreBtn}
+              onPress={() => setExplorCrosswTab('all')}
               activeOpacity={0.8}
             >
-              <Text style={s.exploreBtnText}>Explore</Text>
+              <Text style={explorCrosswStyles.explorCrosswExploreBtnText}>
+                Explore
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
           <ScrollView
-            contentContainerStyle={s.listContent}
+            contentContainerStyle={explorCrosswStyles.explorCrosswListContent}
             showsVerticalScrollIndicator={true}
-            style={s.listScroll}
+            style={explorCrosswStyles.explorCrosswListScroll}
           >
-            {listData.map(item => (
-              <View key={item.id} style={{ marginBottom: 14 }}>
-                {renderCard({ item })}
+            {explorCrosswListData.map(explorCrosswItem => (
+              <View key={explorCrosswItem.id} style={{ marginBottom: 14 }}>
+                {explorCrosswRenderCard({ item: explorCrosswItem })}
               </View>
             ))}
           </ScrollView>
         )}
       </View>
-    </BadenBackground>
+    </ExplrrLayout>
   );
 }
 
-const s = StyleSheet.create({
-  container: {
+const explorCrosswStyles = StyleSheet.create({
+  explorCrosswContainer: {
     flex: 1,
     paddingHorizontal: 5,
   },
-  header: {
+  explorCrosswHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 14,
     marginBottom: 12,
   },
-  backBtn: {
+  explorCrosswBackBtn: {
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  segmentWrap: {
+  explorCrosswSegmentWrap: {
     flexDirection: 'row',
     backgroundColor: 'rgba(28,30,34,0.9)',
     borderRadius: 20,
@@ -238,33 +314,35 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2A2D33',
   },
-  segment: {
+  explorCrosswSegment: {
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 16,
     minWidth: 120,
     alignItems: 'center',
   },
-  segmentActive: {
+  explorCrosswSegmentActive: {
     backgroundColor: '#030051',
     borderWidth: 1,
     borderColor: '#FFFFFF33',
   },
-  segmentText: {
+  explorCrosswSegmentText: {
     color: 'rgba(255,255,255,0.7)',
     fontSize: 16,
     fontWeight: '600',
   },
-  segmentTextActive: {
+  explorCrosswSegmentTextActive: {
     color: '#fff',
   },
-  listScroll: { flex: 1 },
-  listContent: {
+  explorCrosswListScroll: {
+    flex: 1,
+  },
+  explorCrosswListContent: {
     paddingHorizontal: 14,
     paddingTop: 8,
     paddingBottom: 28,
   },
-  card: {
+  explorCrosswCard: {
     flexDirection: 'row',
     backgroundColor: 'rgba(28,30,34,0.9)',
     borderRadius: 22,
@@ -273,18 +351,18 @@ const s = StyleSheet.create({
     padding: 12,
     overflow: 'hidden',
   },
-  thumb: {
+  explorCrosswThumb: {
     width: 100,
     height: 100,
     borderRadius: 14,
   },
-  cardRight: {
+  explorCrosswCardRight: {
     flex: 1,
     marginLeft: 14,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  cardTitle: {
+  explorCrosswCardTitle: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
@@ -292,7 +370,7 @@ const s = StyleSheet.create({
     textAlign: 'center',
     width: '80%',
   },
-  cardActions: {
+  explorCrosswCardActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -300,14 +378,14 @@ const s = StyleSheet.create({
     marginTop: 8,
     width: '80%',
   },
-  iconBtn: {
+  explorCrosswIconBtn: {
     padding: 4,
   },
-  heartIcon: {
+  explorCrosswHeartIcon: {
     color: '#fff',
     fontSize: 22,
   },
-  openBtn: {
+  explorCrosswOpenBtn: {
     paddingVertical: 6,
     paddingHorizontal: 14,
     backgroundColor: '#030051',
@@ -318,26 +396,26 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  openBtnText: {
+  explorCrosswOpenBtnText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '700',
   },
-  shareIcon: {
+  explorCrosswShareIcon: {
     width: 24,
     height: 24,
   },
-  emptyWrap: {
+  explorCrosswEmptyWrap: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 18,
   },
-  emptyImg: {
+  explorCrosswEmptyImg: {
     width: 280,
     height: 300,
   },
-  emptyCard: {
+  explorCrosswEmptyCard: {
     width: '100%',
     borderRadius: 22,
     backgroundColor: 'rgba(28,30,34,0.95)',
@@ -347,13 +425,13 @@ const s = StyleSheet.create({
     paddingVertical: 24,
     marginTop: -10,
   },
-  emptyTitle: {
+  explorCrosswEmptyTitle: {
     color: '#fff',
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
   },
-  emptySub: {
+  explorCrosswEmptySub: {
     color: '#fff',
     marginTop: 14,
     textAlign: 'center',
@@ -362,7 +440,7 @@ const s = StyleSheet.create({
     lineHeight: 22,
     opacity: 0.95,
   },
-  exploreBtn: {
+  explorCrosswExploreBtn: {
     marginTop: 24,
     paddingVertical: 14,
     paddingHorizontal: 32,
@@ -371,7 +449,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C9A24D',
   },
-  exploreBtnText: {
+  explorCrosswExploreBtnText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
