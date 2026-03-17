@@ -734,7 +734,7 @@ const Explreritagehome = () => {
                   activeOpacity={0.7}
                   onPress={() =>
                     Linking.openURL(
-                      'https://apps.apple.com/us/app/badenbabe%D0%BF-heritage-explorer/id6760485949',
+                      'https://apps.apple.com/us/app/badenbabe%D0%BF-heritag%D0%B5-word/id6760717239',
                     )
                   }
                   style={explorCrosswStyles.explorCrosswBottomShare}
