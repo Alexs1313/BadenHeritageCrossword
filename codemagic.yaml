@@ -1,19 +1,19 @@
 workflows:
   ios-workflow:
-    name: 'BadenBabeп: Heritage Word'
+    name: 'Baden-Baben Casual Heritage'
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: HeritagWordAPIKey
+      app_store_connect: CasualHeritagAPIKey
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.sdkjfjherttg.ckrsw
+        bundle_identifier: com.sdflks.iqrjccr.uroew
       vars:
-        BUNDLE_ID: com.sdkjfjherttg.ckrsw
+        BUNDLE_ID: com.sdflks.iqrjccr.uroew
         XCODE_WORKSPACE: BadenHeritageCrossword.xcworkspace
         XCODE_SCHEME: BadenHeritageCrossword
-        APP_STORE_APPLE_ID: 6760717239
+        APP_STORE_APPLE_ID: 6760812475
     scripts:
       - name: Install npm dependencies
         script: |
