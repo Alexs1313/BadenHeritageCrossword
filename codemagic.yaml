@@ -4,16 +4,16 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: CasualHeritagAPIKey
+      app_store_connect: CasulaHeritageAPIKey
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.sdflks.iqrjccr.uroew
+        bundle_identifier: com.dfkjasl.tjwqo.hje
       vars:
-        BUNDLE_ID: com.sdflks.iqrjccr.uroew
+        BUNDLE_ID: com.dfkjasl.tjwqo.hje
         XCODE_WORKSPACE: BadenHeritageCrossword.xcworkspace
         XCODE_SCHEME: BadenHeritageCrossword
-        APP_STORE_APPLE_ID: 6760812475
+        APP_STORE_APPLE_ID: 6761045881
     scripts:
       - name: Install npm dependencies
         script: |

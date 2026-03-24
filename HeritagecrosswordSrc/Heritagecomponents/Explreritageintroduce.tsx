@@ -54,7 +54,7 @@ const Explreritageintroduce = () => {
               ]}
             >
               {Platform.OS === 'ios'
-                ? 'BadenBabeп: Heritage Word'
+                ? 'Baden-Baben Casual Heritage'
                 : 'Baden Heritage Explorer'}
             </Text>
           )}

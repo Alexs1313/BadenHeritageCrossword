@@ -16,7 +16,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import BadenBackground from './ExplrrLayout';
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { BlurView } from '@react-native-community/blur';
