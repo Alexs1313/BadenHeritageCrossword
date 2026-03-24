@@ -512,7 +512,7 @@ const Explreritagehome = () => {
 
   const explorCrosswShareDailyQuote = () => {
     Share.share({
-      message: `Baden Heritage Crossword App Daily Quote:\n\n"${explorCrosswQuote}"`,
+      message: `"${explorCrosswQuote}"`,
     });
   };
 
@@ -733,7 +733,7 @@ const Explreritagehome = () => {
                   activeOpacity={0.7}
                   onPress={() =>
                     Linking.openURL(
-                      'https://apps.apple.com/us/app/badenbabe%D0%BF-heritag%D0%B5-word/id6760717239',
+                      'https://apps.apple.com/us/app/baden-baben-casual-heritage/id6761045881',
                     )
                   }
                   style={explorCrosswStyles.explorCrosswBottomShare}
