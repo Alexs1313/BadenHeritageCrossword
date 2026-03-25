@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Difficulty } from '../uttils/badenCrosswords';
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import { Difficulty } from '../dbUttls/badenCrosswords';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
 import {
   useFocusEffect,
   useNavigation,

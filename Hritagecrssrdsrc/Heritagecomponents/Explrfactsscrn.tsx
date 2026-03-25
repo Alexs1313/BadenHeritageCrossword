@@ -13,8 +13,8 @@ import {
   View,
 } from 'react-native';
 
-// Utils
-import { BADEN_FACTS } from '../uttils/badenFacts';
+import { BADEN_FACTS } from '../dbUttls/badenFacts';
+
 import ExplrrLayout from './ExplrrLayout';
 
 export default function Explrfactsscrn() {

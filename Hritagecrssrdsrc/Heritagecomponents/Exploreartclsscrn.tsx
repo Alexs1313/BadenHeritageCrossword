@@ -1,7 +1,7 @@
 import {
   BADEN_EXPLORE_ARTICLES,
   ExploreArticle,
-} from '../uttils/badenExploreArticles';
+} from '../dbUttls/badenExploreArticles';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo, useState } from 'react';
 import {

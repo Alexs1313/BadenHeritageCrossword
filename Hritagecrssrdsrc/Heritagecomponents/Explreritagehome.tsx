@@ -1,6 +1,10 @@
+// home screen
+
 import { useBadenStore } from '../[Heritagecontxtt]/badenContext';
 import Toast from 'react-native-toast-message';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import Sound from 'react-native-sound';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -20,8 +24,8 @@ import {
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { BlurView } from '@react-native-community/blur';
 
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
-import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
+import { BADEN_CROSSWORDS } from '../dbUttls/badenCrosswords';
 import LinearGradient from 'react-native-linear-gradient';
 import ExplrrLayout from './ExplrrLayout';
 
@@ -733,7 +737,7 @@ const Explreritagehome = () => {
                   activeOpacity={0.7}
                   onPress={() =>
                     Linking.openURL(
-                      'https://apps.apple.com/us/app/baden-baben-casual-heritage/id6761045881',
+                      'https://apps.apple.com/us/app/bad%D0%B5n-bab%D0%B5n-casu%D0%B0l-h%D0%B5r%D1%96tag%D0%B5/id6761116581',
                     )
                   }
                   style={explorCrosswStyles.explorCrosswBottomShare}

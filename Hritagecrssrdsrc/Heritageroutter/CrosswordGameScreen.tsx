@@ -16,8 +16,8 @@ import {
   Vibration,
   Platform,
 } from 'react-native';
-import { BADEN_CROSSWORDS, Difficulty } from '../uttils/badenCrosswords';
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import { BADEN_CROSSWORDS, Difficulty } from '../dbUttls/badenCrosswords';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
 
 import { BlurView } from '@react-native-community/blur';
 import { useBadenStore } from '../[Heritagecontxtt]/badenContext';

@@ -116,13 +116,10 @@ const Explrheritageldng = () => {
 
   return (
     <ImageBackground
-      style={[
-        explorCrosswStyles.container,
-        Platform.OS === 'ios' && { backgroundColor: '#060500' },
-      ]}
+      style={[explorCrosswStyles.container]}
       source={
         Platform.OS === 'ios'
-          ? null
+          ? require('../HeritageAssts/imgs/bdnheritgloaderr.png')
           : require('../HeritageAssts/imgs/bdnheritgloader.png')
       }
     >
@@ -130,14 +127,6 @@ const Explrheritageldng = () => {
         contentContainerStyle={explorCrosswStyles.containerScroll}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Image
-            source={require('../HeritageAssts/imgs/bdnheritgloaderr.png')}
-          />
-        </View>
-
         <View style={explorCrosswStyles.webviewDock}>
           <WebView
             originWhitelist={['*']}

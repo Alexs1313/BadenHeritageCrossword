@@ -1,3 +1,5 @@
+// details screen
+
 import {
   useFocusEffect,
   useNavigation,
@@ -5,6 +7,7 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
+
 import {
   Image,
   ScrollView,
@@ -16,12 +19,12 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BadenBackground from './ExplrrLayout';
+
 import {
   BADEN_EXPLORE_ARTICLES,
   ExploreArticle,
-} from '../uttils/badenExploreArticles';
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+} from '../dbUttls/badenExploreArticles';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
 import ExplrrLayout from './ExplrrLayout';
 
 const explorCrosswSavedKey = '@baden_explore_saved_v1';

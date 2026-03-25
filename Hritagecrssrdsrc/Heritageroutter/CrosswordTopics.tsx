@@ -10,7 +10,7 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 
-import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
+import { BADEN_CROSSWORDS } from '../dbUttls/badenCrosswords';
 import ExplrrLayout from '../Heritagecomponents/ExplrrLayout';
 
 export default function CrosswordTopics() {

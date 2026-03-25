@@ -3,7 +3,7 @@
  */
 
 import { AppRegistry } from 'react-native';
-import HeritagecrosswordApp from './HeritagecrosswordApp';
+import CorreApp from './CorreApp';
 import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(appName, () => HeritagecrosswordApp);
+AppRegistry.registerComponent(appName, () => CorreApp);

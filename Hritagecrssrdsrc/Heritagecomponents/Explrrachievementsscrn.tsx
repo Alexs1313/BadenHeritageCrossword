@@ -1,7 +1,7 @@
 // BadenAchievementsScreen.tsx
 
-import { BADEN_ACHIEVEMENTS } from '../uttils/badenAchievements';
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
+import { BADEN_ACHIEVEMENTS } from '../dbUttls/badenAchievements';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 
-import { BADEN_CROSSWORDS } from '../uttils/badenCrosswords';
+import { BADEN_CROSSWORDS } from '../dbUttls/badenCrosswords';
 import ExplrrLayout from './ExplrrLayout';
 
 type ExplorCrosswAchievementId =

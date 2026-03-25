@@ -19,8 +19,8 @@ import {
   View,
 } from 'react-native';
 import BadenBackground from './ExplrrLayout';
-import { useCrosswordProgress } from '../uttils/useCrosswordProgress';
-import { BADEN_WALLPAPERS, WallpaperItem } from '../uttils/badenWallpapers';
+import { useCrosswordProgress } from '../dbUttls/useCrosswordProgress';
+import { BADEN_WALLPAPERS, WallpaperItem } from '../dbUttls/badenWallpapers';
 import { BlurView } from '@react-native-community/blur';
 import RNFS from 'react-native-fs';
 import ExplrrLayout from './ExplrrLayout';

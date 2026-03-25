@@ -78,13 +78,13 @@ const Explreritageintroduce = () => {
             ]}
           >
             {explorCrosswCurrentPage === 0 &&
-              'A curated crossword inspired by the cultural heritage and intellectual tradition of Baden.'}
+              'A curated puzzle experience inspired by the cultural heritage and intellectual tradition of Baden.'}
             {explorCrosswCurrentPage === 1 &&
               'Thermal culture, classical arts, architecture, society, and symbols. Each crossword follows a clear theme.'}
             {explorCrosswCurrentPage === 2 &&
-              'Difficulty levels unlock gradually as you complete crosswords and move forward.'}
+              'Difficulty levels become available gradually as you complete crosswords and move forward.'}
             {explorCrosswCurrentPage === 3 &&
-              'Correct solutions unlock contextual facts and record your progress through achievements.'}
+              'Correct solutions reveal contextual facts and record your progress through achievements.'}
             {explorCrosswCurrentPage === 4 &&
               'Explore short articles about the history, culture, and architecture of Baden.'}
           </Text>
@@ -122,7 +122,7 @@ const explorCrosswStyles = StyleSheet.create({
   },
 
   explorCrosswBlurBack: {
-    width: 329,
+    width: 311,
     height: 359,
     justifyContent: 'center',
     alignItems: 'center',
